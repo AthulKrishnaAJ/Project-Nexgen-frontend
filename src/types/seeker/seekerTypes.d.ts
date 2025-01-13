@@ -6,7 +6,7 @@ export type passwordTogglingState = {
 }
 
 
-export type userPrimaryDetailsState = {
+export type UserPrimaryDetailsState = {
     firstName: string;
     lastName: string;
     email: string;
@@ -18,4 +18,9 @@ export type userPrimaryDetailsState = {
 export type VerifyOtpPayloads = {
     email: string | null;
     otp: string
+}
+
+export type LoginState = {
+    email: string;
+    password: string
 }

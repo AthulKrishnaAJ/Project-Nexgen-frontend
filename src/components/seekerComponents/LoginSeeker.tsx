@@ -2,16 +2,23 @@ import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import { useFormik } from "formik";
 import * as Yup from 'yup'
+import { useDispatch } from "react-redux";
+
+
+//Files
+import { seekerLoginAction } from "../../redux/actions/seekerActions";
 
 //Styles and icons
 import loginImg from '../../assets/Secure login-bro.png'
 import { LuEye } from "react-icons/lu";
 import { LuEyeClosed } from "react-icons/lu";
 import { CiMail } from "react-icons/ci";
+import { Loader } from "../commonComponents/spinner";
 
 
 //Types
 import { passwordTogglingState } from "../../types/seeker/seekerTypes";
+import { toast } from "sonner";
 
 
 const loginValidationSchema = Yup.object().shape({
@@ -26,6 +33,8 @@ const loginValidationSchema = Yup.object().shape({
 
 const LoginSeeker: React.FC = (): React.ReactElement => {
 
+    const dispatch = useDispatch()
+    const [loading, setLoading] = useState<boolean>(false)
     const [field, setField] = useState<passwordTogglingState>({
         password: {
             type: 'password',
@@ -52,7 +61,25 @@ const LoginSeeker: React.FC = (): React.ReactElement => {
         },
         validationSchema: loginValidationSchema,
         onSubmit: async (values) => {
+          setLoading(true)
+          try {
             console.log('Credentials at login page: ', values)
+            const response = await dispatch(seekerLoginAction(values) as any)
+            console.log('Response after update the store with seeker data at login component: ', response)
+            if(response.payload.success){
+              toast.success(response.payload.message)
+            } else {
+              toast.error(response.payload.message)
+            }
+          } catch (error: any) {
+            console.error('Error in after login in login component: ', error)
+            toast.error('An unexpected error occured')
+          } finally {
+            setTimeout(() => {
+              setLoading(false)
+            }, 500);
+          }
+
         }
     })
 
@@ -132,7 +159,7 @@ const LoginSeeker: React.FC = (): React.ReactElement => {
 
             <div className="mt-4 flex ">
               <button type="submit" className="w-full shadow-xl py-3 px-4 text-sm text-white font-semibold rounded-md bg-[#24A484] hover:bg-[#298872] focus:outline-none transition-colors">
-                Login
+                {loading ? <Loader size={16}/> : 'Login'}
               </button>
 
             </div>

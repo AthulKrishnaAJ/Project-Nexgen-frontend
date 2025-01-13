@@ -9,8 +9,7 @@ import { signupSeeker } from "../../apiServices/seekerApi";
 //Styles and icons
 import { LuEye } from "react-icons/lu";
 import { LuEyeClosed } from "react-icons/lu";
-import { CiMobile3 } from "react-icons/ci";
-import { CiMail } from "react-icons/ci";
+import { CiMobile3, CiUser, CiMail } from "react-icons/ci";
 import signupImg from '../../assets/signupImg.png'
 import { toast } from 'sonner'
 import { Loader } from "../commonComponents/spinner";
@@ -19,7 +18,7 @@ import { Loader } from "../commonComponents/spinner";
 
 //Types
 import { passwordTogglingState } from "../../types/seeker/seekerTypes";
-import { userPrimaryDetailsState } from "../../types/seeker/seekerTypes";
+import { UserPrimaryDetailsState } from "../../types/seeker/seekerTypes";
 
 
 
@@ -35,7 +34,7 @@ const sighupSchema = Yup.object({
   .min(2, 'Must contain at least 2 characters')
   .required('Field is required'),
   email: Yup.string()
-  .email('Use valida email address')
+  .email('Use valid email address')
   .required('Field is required'),
   mobile: Yup.string()
   .matches(/^[0-9]{10}$/, 'Mobile number must be 10 digits')
@@ -91,21 +90,20 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
       setLoading(true)
       const userData = Object.fromEntries(
         Object.entries(values).filter(([key]) => key !== 'confirmPassword')
-      ) as userPrimaryDetailsState
+      ) as UserPrimaryDetailsState
 
       console.log(userData)
-      const response = await signupSeeker(userData)
+      const response = await signupSeeker(userData, setLoading)
       console.log('Response after the sending Otp to the mail: ', response)
       const data = response?.data
       if (data.success) {
         toast.success(data.message)
-        setLoading(false)
         localStorage.setItem('userEmail', userData.email)
         navigate('/otp')
       } else {
         toast.error(data.message)
       }
-
+      setLoading(false)
     }
   })
 
@@ -125,13 +123,16 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
             <div className="flex gap-4">
               <div className="w-1/2">
                 <label htmlFor="" className="text-gray-600 text-xs block mb-1">First Name</label>
-                <div className="flex items-center">
+                <div className="relative flex items-center">
                   <input name="firstName" type="text" className="w-full bg-transparent text-xs text-black border-b border-gray-300
                              focus:border-[#24A484] px-1 py-1 outline-none" placeholder="First Name"
                     value={formik.values.firstName}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
+                <span className="absolute right-2 text-gray-600">
+                  <CiUser />
+                </span>
                 </div>
                 {
                   formik.touched.firstName && formik.errors.firstName && (
@@ -149,6 +150,9 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
+                <span className="absolute right-2 text-gray-600">
+                  <CiUser />
+                </span>
                 </div>
                 {
                   formik.touched.lastName && formik.errors.lastName && (

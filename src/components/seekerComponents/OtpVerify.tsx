@@ -92,19 +92,23 @@ const OtpVerify: React.FC = (): React.ReactElement => {
             const payload: VerifyOtpPayloads = {email, otp: otpValue}
             console.log('Otp submitted at handleSubmit: ', payload)
             try {
-                const result = await verifyOtp(payload)
-                const {data} = result
-                if(data.status){
-                    toast.success(data.message)
-                    setLoading(false)
-                } else {
-                    toast.error(data.message)
+                const data = await verifyOtp(payload)
+                if(data){
+                    if(data?.status){
+                        toast.success(data.message)
+                    } else {
+                        toast.error(data.message)
+                    }
                 }
-           
+                setLoading(false)
             } catch (error: any) {
                 console.log('Error in verify otp at verify otp handleSubmit: ', error.message)
                 toast.error('An unexpected error occur')
-            } 
+            } finally {
+                setTimeout(() => {
+                    setLoading(false)
+                }, 500)
+            }
         }
 
     }
@@ -166,7 +170,7 @@ const OtpVerify: React.FC = (): React.ReactElement => {
                         {error && <p className="text-red-500 text-xs">{error}</p>}
                     <button 
                     type="submit"
-                     className="bg-[#24A484] w-full mt-8 py-3 px-3 text-white rounded-md hover:bg-[#298872] transition-colors">
+                     className="bg-[#24A484] w-full mt-6 py-3 px-3 text-white rounded-md hover:bg-[#298872] transition-colors">
                         {loading ? <Loader size={18}/> : 'Verify Otp'}
                     </button>
                     </form>

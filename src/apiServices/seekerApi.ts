@@ -1,7 +1,6 @@
 
 // types
-import { userPrimaryDetailsState, VerifyOtpPayloads } from "../types/seeker/seekerTypes"
-
+import { UserPrimaryDetailsState, VerifyOtpPayloads } from "../types/seeker/seekerTypes"
 
 //Files
 import { axiosSeeker } from "../utils/axiosUtil"
@@ -11,7 +10,7 @@ import httpStatus from "../utils/httpStatus"
 import { toast } from "sonner"
 
 
-export const signupSeeker = async (userData: userPrimaryDetailsState): Promise<any> => {
+export const signupSeeker = async (userData: UserPrimaryDetailsState, setLoading: (loading: boolean) => void): Promise<any> => {
     try{
         console.log('user data in signup user api page: ', userData)
         const response = await axiosSeeker.post('/signup', userData)
@@ -23,7 +22,12 @@ export const signupSeeker = async (userData: userPrimaryDetailsState): Promise<a
             toast.warning(data.message)
         } else if (status === httpStatus.INTERNAL_SERVER_ERROR){
             toast.error(data.message)
-        }
+        } 
+       
+    } finally {
+        setTimeout(() => {
+            setLoading(false)
+        }, 500)
     }
 }
 
@@ -51,10 +55,10 @@ export const verifyOtp = async (payload: VerifyOtpPayloads): Promise<any> => {
     try {
         const response = await axiosSeeker.post('/verifyOtp', payload)
         console.log('Response from after otp submission: ', response)
-        return response
+        return response.data
     } catch (error: any) {
         console.log('Error in verifyOtp at seeker Api service: ', error)
-        const {data, status} = error.response
+        const {data, status} = error?.response
         if(status === httpStatus.BAD_REQUEST){
             toast.error(data.message)
         } else if(status === httpStatus.CONFLICT) {
@@ -63,5 +67,5 @@ export const verifyOtp = async (payload: VerifyOtpPayloads): Promise<any> => {
             toast.error(data.message)
         }
         
-    }
+    } 
 }

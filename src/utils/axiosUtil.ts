@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-const seekerUrl = 'http://localhost:3000/api/seeker'
-// const companyUrl = 'http://localhost:3000/api/company'
-// const adminUrl = 'http://localhost:3000/api/admin'
+const seekerUrl = 'http://localhost:9009/api/seeker'
+const companyUrl = 'http://localhost:9009/api/company'
+// const adminUrl = 'http://localhost:9009/api/admin'
 
 
 
@@ -11,6 +11,14 @@ export const axiosSeeker = axios.create({
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json'
+    }
+})
+
+export const axiosCompany = axios.create({
+    baseURL: companyUrl,
+    withCredentials: true,
+    headers: {
+          'Content-Type': 'application/json'
     }
 })
 
