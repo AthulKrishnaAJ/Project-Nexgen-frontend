@@ -14,18 +14,20 @@ import { LuEye } from "react-icons/lu";
 import { LuEyeClosed } from "react-icons/lu";
 import { CiMail } from "react-icons/ci";
 import { Loader } from "../commonComponents/spinner";
+import { toast } from "sonner";
 
 
 //Types
 import { passwordTogglingState } from "../../types/seeker/seekerTypes";
-import { toast } from "sonner";
-
+import { LoginState } from "../../types/common/commonTypes";
 
 const loginValidationSchema = Yup.object().shape({
     email: Yup.string()
+    .transform((value) => value.trim())
     .email('Enter valid email address')
     .required('Field is required'),
     password: Yup.string()
+    .transform((value) => value.trim())
     .required('Field is required')
 })
 
@@ -60,10 +62,10 @@ const LoginSeeker: React.FC = (): React.ReactElement => {
             password: ''
         },
         validationSchema: loginValidationSchema,
-        onSubmit: async (values) => {
+        onSubmit: async (values: LoginState) => {
           setLoading(true)
+          console.log('Credentials at login page: ', values)
           try {
-            console.log('Credentials at login page: ', values)
             const response = await dispatch(seekerLoginAction(values) as any)
             console.log('Response after update the store with seeker data at login component: ', response)
             if(response.payload.success){
@@ -106,8 +108,8 @@ const LoginSeeker: React.FC = (): React.ReactElement => {
             <div className="mt-4">
               <label className="text-gray-600 text-xs block mb-1">Email</label>
               <div className="relative flex items-center">
-                <input name="email" type="text" className="w-full bg-transparent text-xs text-black border-b border-gray-300 focus:border-[#24A484] px-1
-                     py-1 outline-none" placeholder="Enter email" 
+                <input name="email" type="text" className={`w-full bg-transparent text-xs text-black border-b px-1
+                     ${formik.touched.email && formik.errors.email ? 'border-red-400' : 'border-gray-300 focus:border-[#24A484]'} py-1 outline-none`} placeholder="Enter email" 
                      value={formik.values.email}
                      onChange={formik.handleChange}
                      onBlur={formik.handleBlur}
@@ -129,8 +131,8 @@ const LoginSeeker: React.FC = (): React.ReactElement => {
             <div className="mt-4">
               <label className="text-gray-600 text-xs block mb-1">Password</label>
               <div className="relative flex items-center">
-                <input name="password"  className="w-full bg-transparent text-xs text-black border-b border-gray-300 focus:border-[#24A484]
-                    px-1 py-1 outline-none" placeholder="Enter password"
+                <input name="password"  className={`w-full bg-transparent text-xs text-black border-b px-1
+                     ${formik.touched.password && formik.errors.password ? 'border-red-400' : 'border-gray-300 focus:border-[#24A484]'} py-1 outline-none`} placeholder="Enter password"
                     type={field.password.type}
                     value={formik.values.password}
                     onChange={formik.handleChange}

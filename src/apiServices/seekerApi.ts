@@ -1,6 +1,7 @@
 
-// types
-import { UserPrimaryDetailsState, VerifyOtpPayloads } from "../types/seeker/seekerTypes"
+// types and interface
+import { UserPrimaryDetailsState } from "../types/seeker/seekerTypes"
+import { VerifyOtpPayloads } from "../types/common/commonTypes"
 
 //Files
 import { axiosSeeker } from "../utils/axiosUtil"
@@ -47,6 +48,7 @@ export const resendOtp = async (email: string | null): Promise<any> => {
         } else if(status === httpStatus.INTERNAL_SERVER_ERROR){
             toast.error(data.message)
         }
+       
     }
 }
 

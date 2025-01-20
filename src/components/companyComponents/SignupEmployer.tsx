@@ -1,36 +1,30 @@
 import React,{useState} from 'react'
-import { useFormik, yupToFormErrors } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup'
+import { useNavigate } from 'react-router-dom';
 
 //Styles and Icons
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { CiMobile3, CiMail, CiUser } from "react-icons/ci";
 import signupEmployerImg from '../../assets/signupEmployerImg.png'
 import { Loader } from '../commonComponents/spinner';
+import {toast} from 'sonner'
+
+//Files
+import { signupEmployer } from '../../apiServices/companyApi';
+import signupValidationSchema from '../../validations/signupValidation';
 
 
-const signupValidationSchema = Yup.object({
-    firstName: Yup.string()
-    .required('Field is required'),
-    lastName: Yup.string()
-    .required('Field is required'),
-    email: Yup.string()
-    .email('Use valid email address')
-    .required('Field is required'),
-    mobile: Yup.string()
-    .required('Field is required'),
-    password: Yup.string()
-    .required('Field is required'),
-    confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password')], 'Password not matching')
-    .required('Field is required')
-})
+//types
+import { EmployerPrimaryDetailsState } from '../../types/company/companyTypes';
+
 
 
 const SignupEmployer: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState<boolean>(false)
+    const navigate = useNavigate()
 
 
     const formik = useFormik ({
@@ -46,10 +40,28 @@ const SignupEmployer: React.FC = () => {
         onSubmit: async (values) => {
             setLoading(true)
             console.log('details in employers sigup form: ', values)
+
+            const employerData = Object.fromEntries(
+                    Object.entries(values).map(([key, value]) => [key, value.trim()])
+                    .filter(([key]) => key !== 'confirmPassword')
+                  ) as EmployerPrimaryDetailsState
+
             try {
-                
+                const response = await signupEmployer(employerData)
+                console.log('Response after employer signup: ', response)
+                if(response){
+                  const data = response?.data
+                  if(data.success){
+                    toast.success(data.message)
+                    const otpExpirationTime = Math.floor(Date.now() / 1000) + 60
+                    localStorage.setItem('employerEmail', employerData.email)
+                    localStorage.setItem('employerOtpExpiration', otpExpirationTime.toString())
+                    navigate('/employer/otp')
+                  }
+                }
             } catch (error: any) {
                 console.error('Error in employer signup submission at signup employer component: ', error)
+                toast.error('An unexpected error occured')
             } finally {
                 setTimeout(() => {
                     setLoading(false)
@@ -105,7 +117,8 @@ const SignupEmployer: React.FC = () => {
                       type="text"
                       id="firstName"
                       name="firstName" 
-                      className="w-full bg-transparent text-xs border-b border-gray-300 focus:border-themeColor px-2 py-2 pr-8 outline-none" 
+                      className={`w-full bg-transparent text-xs border-b px-2 py-2 pr-8 outline-none
+                        ${formik.touched.firstName && formik.errors.firstName ? 'border-red-400' : 'border-gray-300 focus:border-themeColor'}`} 
                       placeholder="Enter first name" 
                       value={formik.values.firstName}
                       onChange={formik.handleChange}
@@ -128,7 +141,8 @@ const SignupEmployer: React.FC = () => {
                       type="text"
                       id="lastName"
                       name="lastName" 
-                      className="w-full bg-transparent text-xs border-b border-gray-300 focus:border-themeColor px-2 py-2 pr-8 outline-none" 
+                      className={`w-full bg-transparent text-xs border-b px-2 py-2 pr-8 outline-none
+                        ${formik.touched.lastName && formik.errors.lastName ? 'border-red-400' : 'border-gray-300 focus:border-themeColor'}`} 
                       placeholder="Enter last name" 
                       value={formik.values.lastName}
                       onChange={formik.handleChange}
@@ -152,7 +166,8 @@ const SignupEmployer: React.FC = () => {
                       type="email"
                       id="email"
                       name="email" 
-                      className="w-full bg-transparent text-xs border-b border-gray-300 focus:border-themeColor px-2 py-2 pr-8 outline-none" 
+                      className={`w-full bg-transparent text-xs border-b px-2 py-2 pr-8 outline-none
+                        ${formik.touched.email && formik.errors.email ? 'border-red-400' : 'border-gray-300 focus:border-themeColor'}`} 
                       placeholder="Enter email" 
                       value={formik.values.email}
                       onChange={formik.handleChange}
@@ -176,7 +191,8 @@ const SignupEmployer: React.FC = () => {
                       type="tel"
                       id="mobile"
                       name="mobile" 
-                      className="w-full bg-transparent text-xs border-b border-gray-300 focus:border-themeColor px-2 py-2 pr-8 outline-none" 
+                      className={`w-full bg-transparent text-xs border-b px-2 py-2 pr-8 outline-none
+                        ${formik.touched.mobile && formik.errors.mobile ? 'border-red-400' : 'border-gray-300 focus:border-themeColor'}`} 
                       placeholder="Enter mobile number" 
                       value={formik.values.mobile}
                       onChange={formik.handleChange}
@@ -200,7 +216,8 @@ const SignupEmployer: React.FC = () => {
                       type={showPassword ? "text" : "password"}
                       id="password"
                       name="password" 
-                      className="w-full bg-transparent text-xs border-b border-gray-300 focus:border-themeColor px-2 py-2 pr-8 outline-none" 
+                      className={`w-full bg-transparent text-xs border-b px-2 py-2 pr-8 outline-none
+                        ${formik.touched.password && formik.errors.password ? 'border-red-400' : 'border-gray-300 focus:border-themeColor'}`}  
                       placeholder="Enter password"
                       value={formik.values.password}
                       onChange={formik.handleChange}
@@ -230,7 +247,8 @@ const SignupEmployer: React.FC = () => {
                       type={showConfirmPassword ? "text" : "password"}
                       id="confirmPassword"
                       name="confirmPassword" 
-                      className="w-full bg-transparent text-xs border-b border-gray-300 focus:border-themeColor px-2 py-2 pr-8 outline-none" 
+                      className={`w-full bg-transparent text-xs border-b px-2 py-2 pr-8 outline-none
+                        ${formik.touched.confirmPassword && formik.errors.confirmPassword ? 'border-red-400' : 'border-gray-300 focus:border-themeColor'}`} 
                       placeholder="Confirm password" 
                       value={formik.values.confirmPassword}
                       onChange={formik.handleChange}
@@ -260,7 +278,7 @@ const SignupEmployer: React.FC = () => {
                  >
               <span className="relative z-10">{loading ? <Loader size={16}/> : 'Create account'}</span>
               <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-500 group-hover:opacity-0 transition-opacity duration-300"></div>
-              <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
                   <p className="text-sm mt-3 text-center text-gray-800">
                     Already have an account? 

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import * as Yup from 'yup'
 import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 
-// Api's
+//Files
 import { signupSeeker } from "../../apiServices/seekerApi";
+import signupValidationSchema from "../../validations/signupValidation";
 
 //Styles and icons
 import { LuEye } from "react-icons/lu";
@@ -14,42 +14,9 @@ import signupImg from '../../assets/signupImg.png'
 import { toast } from 'sonner'
 import { Loader } from "../commonComponents/spinner";
 
-
-
 //Types
 import { passwordTogglingState } from "../../types/seeker/seekerTypes";
 import { UserPrimaryDetailsState } from "../../types/seeker/seekerTypes";
-
-
-
-
-const sighupSchema = Yup.object({
-
-  firstName: Yup.string()
-  .matches(/^[a-zA-Z\s]*$/, 'Must contain only letters')
-  .min(2, 'Must contain at least 2 characters')
-  .required('Field is required'),
-  lastName: Yup.string()
-  .matches(/^[a-zA-Z\s]*$/, 'Must contain only letters')
-  .min(2, 'Must contain at least 2 characters')
-  .required('Field is required'),
-  email: Yup.string()
-  .email('Use valid email address')
-  .required('Field is required'),
-  mobile: Yup.string()
-  .matches(/^[0-9]{10}$/, 'Mobile number must be 10 digits')
-  .required('Field is required'),
-  password: Yup.string()
-  .min(6, 'Password must be 6 characters')
-  .matches(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-    'Must contain, lowercase, uppercase, number and special character'
-  )
-    .required('Field is required'),
-  confirmPassword: Yup.string()
-    .required('Field is required')
-    .oneOf([Yup.ref('password')], 'Password must match')
-})
 
 
 const SignupSeeker: React.FC = (): React.ReactElement => {
@@ -84,22 +51,29 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
       confirmPassword: ''
     },
 
-    validationSchema: sighupSchema,
+    validationSchema: signupValidationSchema,
 
     onSubmit: async (values) => {
       setLoading(true)
+
+      console.log('Before trimming: ', values)
+
       const userData = Object.fromEntries(
-        Object.entries(values).filter(([key]) => key !== 'confirmPassword')
+        Object.entries(values).map(([key, value]) => [key, value.trim()])
+        .filter(([key]) => key !== 'confirmPassword')
       ) as UserPrimaryDetailsState
 
-      console.log(userData)
+      console.log('After trimming: ', userData)
+
       const response = await signupSeeker(userData, setLoading)
       console.log('Response after the sending Otp to the mail: ', response)
       const data = response?.data
       if (data.success) {
         toast.success(data.message)
+        const otpExpirationTime = Math.floor(Date.now() / 1000) + 60
         localStorage.setItem('userEmail', userData.email)
-        navigate('/otp')
+        localStorage.setItem('seekerOtpExpiration', otpExpirationTime.toString())
+        navigate('/otp', {replace: true})
       } else {
         toast.error(data.message)
       }
@@ -124,15 +98,15 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
               <div className="w-1/2">
                 <label htmlFor="" className="text-gray-600 text-xs block mb-1">First Name</label>
                 <div className="relative flex items-center">
-                  <input name="firstName" type="text" className="w-full bg-transparent text-xs text-black border-b border-gray-300
-                             focus:border-[#24A484] px-1 py-1 outline-none" placeholder="First Name"
+                  <input name="firstName" type="text" className={`w-full bg-transparent text-xs text-black border-b border-gray-300
+                          ${formik.touched.firstName && formik.errors.firstName ? 'border-red-400': 'border-gray-300 focus:border-[#24A484]'} px-1 py-1 outline-none`} placeholder="First Name"
                     value={formik.values.firstName}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
-                <span className="absolute right-2 text-gray-600">
+                {/* <span className="absolute right-2 text-gray-600">
                   <CiUser />
-                </span>
+                </span> */}
                 </div>
                 {
                   formik.touched.firstName && formik.errors.firstName && (
@@ -144,15 +118,15 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
               <div className="w-1/2">
                 <label htmlFor="" className="text-gray-600 text-xs block mb-1">Last Name</label>
                 <div className="relative flex items-center">
-                  <input name="lastName" type="text" className="w-full bg-transparent text-xs text-black border-b border-gray-300
-                             focus:border-[#24A484] px-1 py-1 outline-none" placeholder="Last Name"
+                  <input name="lastName" type="text" className={`w-full bg-transparent text-xs text-black border-b border-gray-300
+                             ${formik.touched.lastName && formik.errors.lastName ? 'border-red-400' : 'border-gray-300 focus:border-[#24A484]'} px-1 py-1 outline-none`} placeholder="Last Name"
                     value={formik.values.lastName}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
-                <span className="absolute right-2 text-gray-600">
+                {/* <span className="absolute right-2 text-gray-600">
                   <CiUser />
-                </span>
+                </span> */}
                 </div>
                 {
                   formik.touched.lastName && formik.errors.lastName && (
@@ -166,8 +140,8 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
             <div className="mt-4">
               <label className="text-gray-600 text-xs block mb-1">Email</label>
               <div className="relative flex items-center">
-                <input name="email" type="text" className="w-full bg-transparent text-xs text-black border-b border-gray-300 focus:border-[#24A484] px-1
-                     py-1 outline-none" placeholder="Enter email"
+                <input name="email" type="text" className={`w-full bg-transparent text-xs text-black border-b border-gray-300
+                             ${formik.touched.email && formik.errors.email ? 'border-red-400' : 'border-gray-300 focus:border-[#24A484]'} px-1 py-1 outline-none`} placeholder="Last Name"
                   value={formik.values.email}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -188,8 +162,8 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
             <div className="mt-4">
               <label className="text-gray-600 text-xs block mb-1">Mobile</label>
               <div className=" relative flex items-center">
-                <input name="mobile" type="mobile" className="w-full bg-transparent text-xs text-black border-b border-gray-400 focus:border-[#24A484]
-                    px-1 py-1 outline-none" placeholder="Enter number"
+                <input name="mobile" type="mobile" className={`w-full bg-transparent text-xs text-black border-b border-gray-300
+                             ${formik.touched.mobile && formik.errors.mobile ? 'border-red-400' : 'border-gray-300 focus:border-[#24A484]'} px-1 py-1 outline-none`} placeholder="Last Name"
                   value={formik.values.mobile}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -210,9 +184,8 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
             <div className="mt-4">
               <label className="text-gray-600 text-xs block mb-1">Password</label>
               <div className="relative flex items-center">
-                <input name="password" type={field.password.type} className="w-full bg-transparent text-xs text-black border-b border-gray-300 focus:border-[#24A484]
-                    px-1 py-1 outline-none" placeholder="Enter password"
-                  value={formik.values.password}
+                <input name="password" type={field.password.type} className={`w-full bg-transparent text-xs text-black border-b border-gray-300
+                             ${formik.touched.password && formik.errors.password ? 'border-red-400' : 'border-gray-300 focus:border-[#24A484]'} px-1 py-1 outline-none`} placeholder="Last Name"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 />
@@ -233,8 +206,8 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
             <div className="mt-4">
               <label className="text-gray-600 text-xs block mb-1">Confirm Password</label>
               <div className="relative flex items-center">
-                <input name="confirmPassword" type={field.confirmPassword.type} className="w-full bg-transparent text-xs text-black border-b border-gray-300 focus:border-[#24A484]
-                    px-1 py-1 outline-none" placeholder="Re-enter password"
+                <input name="confirmPassword" type={field.confirmPassword.type} className={`w-full bg-transparent text-xs text-black border-b border-gray-300
+                             ${formik.touched.confirmPassword && formik.errors.confirmPassword ? 'border-red-400' : 'border-gray-300 focus:border-[#24A484]'} px-1 py-1 outline-none`} placeholder="Last Name"
                   value={formik.values.confirmPassword}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -261,7 +234,7 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
 
             <div className="mt-2 flex ">
               <button type="submit" className="w-full shadow-xl py-3 px-4 text-sm text-white font-semibold rounded-md bg-[#24A484] hover:bg-[#298872] focus:outline-none transition-colors">
-                {loading ? <Loader size={18}/> : 'Signup'}
+                {loading ? <Loader size={16}/> : 'Signup'}
               </button>
 
             </div>
