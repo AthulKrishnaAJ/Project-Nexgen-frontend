@@ -4,7 +4,6 @@ import { useFormik } from "formik";
 import * as Yup from 'yup'
 import { useDispatch } from "react-redux";
 
-
 //Files
 import { seekerLoginAction } from "../../redux/actions/seekerActions";
 
@@ -16,10 +15,12 @@ import { CiMail } from "react-icons/ci";
 import { Loader } from "../commonComponents/spinner";
 import { toast } from "sonner";
 
-
 //Types
 import { passwordTogglingState } from "../../types/seeker/seekerTypes";
 import { LoginState } from "../../types/common/commonTypes";
+import { AppDispatch } from "../../types/common/commonTypes";
+
+
 
 const loginValidationSchema = Yup.object().shape({
     email: Yup.string()
@@ -35,7 +36,7 @@ const loginValidationSchema = Yup.object().shape({
 
 const LoginSeeker: React.FC = (): React.ReactElement => {
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<AppDispatch>()
     const [loading, setLoading] = useState<boolean>(false)
     const [field, setField] = useState<passwordTogglingState>({
         password: {
@@ -64,9 +65,12 @@ const LoginSeeker: React.FC = (): React.ReactElement => {
         validationSchema: loginValidationSchema,
         onSubmit: async (values: LoginState) => {
           setLoading(true)
-          console.log('Credentials at login page: ', values)
+          const trimData = Object.fromEntries(
+                Object.entries(values).map(([key, value]) => [key, value.trim()])
+                ) as LoginState
+          console.log('Credentials at login page: ', trimData)
           try {
-            const response = await dispatch(seekerLoginAction(values) as any)
+            const response = await dispatch(seekerLoginAction(trimData) as any)
             console.log('Response after update the store with seeker data at login component: ', response)
             if(response.payload.success){
               toast.success(response.payload.message)
@@ -153,18 +157,20 @@ const LoginSeeker: React.FC = (): React.ReactElement => {
               }
 
             </div>
-            <p className="text-sm text-gray-600 mt-8">Don't have an account? 
+              <div className="mt-6">
+                <p className="text-sm text-gray-600 font-semibold"><Link to='/emailVerify'>Forgot password ?</Link></p>
+              </div>
+
+            <div className="mt-4 flex ">
+              <button type="submit" className="w-full shadow-xl py-3 px-4 text-sm text-white font-semibold rounded-md bg-[#24A484] hover:bg-[#298872] focus:outline-none transition-colors">
+                {loading ? <Loader size={60}/> : 'Login'}
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 mt-4">Don't have an account? 
                 <Link to='/signup' className="text-[#24A484] font-semibold hover:underline ml-1">
                     Signup here
                 </Link>
             </p>
-
-            <div className="mt-4 flex ">
-              <button type="submit" className="w-full shadow-xl py-3 px-4 text-sm text-white font-semibold rounded-md bg-[#24A484] hover:bg-[#298872] focus:outline-none transition-colors">
-                {loading ? <Loader size={16}/> : 'Login'}
-              </button>
-
-            </div>
           </form>
         </div>
       </div>

@@ -1,20 +1,22 @@
 import React from "react"
-import { squircle } from "ldrs"
+import { squircle, mirage} from "ldrs"
 
 //Types
 import { LoadedProps } from "../../types/common/commonTypes"
 
 
 export const Loader: React.FC<LoadedProps> = ({size}) => {
-    squircle.register()
+  mirage.register()
       return (
-        <l-squircle
-        size={size}
-        stroke={3}
-        stroke-length={0.15}
-        bg-opacity={0.1}
-        speed={0.9}
-        color='white'
-        />
+        <l-mirage
+          size={size}
+          speed="2.5" 
+          color="white" 
+        ></l-mirage>
       )
   }
+
+
+
+
+

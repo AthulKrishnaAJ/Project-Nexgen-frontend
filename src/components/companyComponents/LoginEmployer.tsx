@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
 import { useFormik } from 'formik';
 import* as Yup from 'yup'
-import { useDispatch, UseDispatch } from 'react-redux';
-
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 //Files
 import { employerLoginAction } from '../../redux/actions/companyActions';
@@ -11,11 +11,11 @@ import { employerLoginAction } from '../../redux/actions/companyActions';
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { CiMail } from "react-icons/ci";
 import { Loader } from '../commonComponents/spinner';
-
-
+import { toast } from 'sonner';
 
 //Types
 import { LoginState } from '../../types/common/commonTypes';
+import { AppDispatch } from '../../types/common/commonTypes';
 
 
 const employerLoginValidationSchema = Yup.object().shape({
@@ -31,7 +31,7 @@ const employerLoginValidationSchema = Yup.object().shape({
 const LoginEmployer: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [loading, setLoading] = useState(false)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
 
 
   const formik = useFormik({
@@ -41,14 +41,28 @@ const LoginEmployer: React.FC = () => {
     },
     validationSchema: employerLoginValidationSchema,
     onSubmit: async (values: LoginState) => {
+      setLoading(true)
       const trimData = Object.fromEntries(
         Object.entries(values).map(([key, value]) => [key, value.trim()])
       ) as LoginState
-      console.log('Empoyer data at login form submission: ', trimData)
+
       try {
         const response = await dispatch(employerLoginAction(trimData) as any)
-      } catch (error) {
-        
+        console.log('Response after in login component: ', response)
+        if(response){
+          if(response.payload.success){
+            toast.success(response.payload.message)
+          } else {
+            toast.error(response.payload.message)
+          }
+        }
+      } catch (error: any) {
+        console.log('Error in after login in employer login component: ', error)
+        toast.error('An unexpected error occured!')
+      } finally {
+        setTimeout(() => {
+          setLoading(false)
+        }, 500)
       }
     }
   })
@@ -116,19 +130,25 @@ const LoginEmployer: React.FC = () => {
           </div>
 
           <div>
+            
+          <div className='mb-4'>
+            <p className='text-gray-600 cursor-pointer text-sm font-semibold'>Forgot password ?</p>
+          </div>
             <button 
                   type="submit" 
-                  className="w-full py-2.5 px-4 text-sm tracking-wider rounded text-white focus:outline-none relative overflow-hidden group"
+                  className="w-full py-2.5 px-4 text-sm tracking-wider rounded-md text-white focus:outline-none relative overflow-hidden group"
                   >
-                          <span className="relative z-10">Login</span>
+                          <span className="relative z-10">{loading ? <Loader size={60}/> : 'Login'}</span>
                           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-500 group-hover:opacity-0 transition-opacity duration-300"></div>
                           <div className="absolute inset-0 bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
           </div>
+          <p className="text-sm text-gray-600 text-center">Don't have an account? 
+                <Link to='/employer/signup' className="text-[#24A484] font-semibold hover:underline ml-1">
+                    Signup here
+                </Link>
+            </p>
 
-          <div className='text-center text-sm'>
-            <a href="#" className='text-themeColor hover:underline'>Forgot password ?</a>
-          </div>
 
         </form>
 

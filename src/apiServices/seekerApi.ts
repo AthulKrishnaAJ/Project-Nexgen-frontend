@@ -53,17 +53,16 @@ export const resendOtp = async (email: string | null): Promise<any> => {
 }
 
 
-export const verifyOtp = async (payload: VerifyOtpPayloads): Promise<any> => {
+export const verifyOtp = async (payload: VerifyOtpPayloads, url: string): Promise<any> => {
     try {
-        const response = await axiosSeeker.post('/verifyOtp', payload)
+        console.log('URL of otp verification: ', url)
+        const response = await axiosSeeker.post(url, payload)
         console.log('Response from after otp submission: ', response)
         return response.data
     } catch (error: any) {
         console.log('Error in verifyOtp at seeker Api service: ', error)
         const {data, status} = error?.response
-        if(status === httpStatus.BAD_REQUEST){
-            toast.error(data.message)
-        } else if(status === httpStatus.CONFLICT) {
+        if(status === httpStatus.CONFLICT){
             toast.warning(data.message)
         } else {
             toast.error(data.message)
@@ -71,3 +70,17 @@ export const verifyOtp = async (payload: VerifyOtpPayloads): Promise<any> => {
         
     } 
 }
+
+
+export const forgotPassEmailVerify = async (email: string): Promise<any> => {
+    try {
+        const response = await axiosSeeker.post('/emailVerify', {email})
+        console.log('Response from forgotPasswordEmailVerify after email submission: ', response)
+        return response
+    } catch (error: any) {
+        console.error('Error in forgotPasswordEmailVerify: ', error)
+        const {data} = error.response
+        toast.error(data.message)
+    }
+}
+

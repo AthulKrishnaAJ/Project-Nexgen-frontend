@@ -9,7 +9,7 @@ import signupValidationSchema from "../../validations/signupValidation";
 //Styles and icons
 import { LuEye } from "react-icons/lu";
 import { LuEyeClosed } from "react-icons/lu";
-import { CiMobile3, CiUser, CiMail } from "react-icons/ci";
+import { CiMobile3, CiMail } from "react-icons/ci";
 import signupImg from '../../assets/signupImg.png'
 import { toast } from 'sonner'
 import { Loader } from "../commonComponents/spinner";
@@ -70,7 +70,7 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
       const data = response?.data
       if (data.success) {
         toast.success(data.message)
-        const otpExpirationTime = Math.floor(Date.now() / 1000) + 60
+        const otpExpirationTime = Math.floor(Date.now() / 1000) + 60 
         localStorage.setItem('userEmail', userData.email)
         localStorage.setItem('seekerOtpExpiration', otpExpirationTime.toString())
         navigate('/otp', {replace: true})
@@ -234,7 +234,7 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
 
             <div className="mt-2 flex ">
               <button type="submit" className="w-full shadow-xl py-3 px-4 text-sm text-white font-semibold rounded-md bg-[#24A484] hover:bg-[#298872] focus:outline-none transition-colors">
-                {loading ? <Loader size={16}/> : 'Signup'}
+                {loading ? <Loader size={60}/> : 'Signup'}
               </button>
 
             </div>

@@ -1,4 +1,4 @@
-import React from 'react'
+
 import LoginSeeker from '../../components/seekerComponents/LoginSeeker'
 
 const LoginSeekerPage: React.FC = () => {

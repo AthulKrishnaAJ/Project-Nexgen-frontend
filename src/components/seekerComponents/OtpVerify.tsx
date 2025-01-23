@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 //Api's
 import { verifyOtp } from "../../apiServices/seekerApi";
@@ -22,12 +22,15 @@ const OtpVerify: React.FC = (): React.ReactElement => {
     const [timer, setTimer] = useState<number>(60)
     const [isTimerActive, setIsTimerActive] = useState<boolean>(true)
     const navigate = useNavigate()
+    const location = useLocation()
+    const locationState = location.state
     
 
     useEffect(() => {
         if(inputRef.current[0]){
             inputRef.current[0].focus()
         }
+        console.log('Location state: ', locationState)
     }, [])
 
     useEffect(() => {
@@ -96,15 +99,16 @@ const OtpVerify: React.FC = (): React.ReactElement => {
         const email = localStorage.getItem('userEmail')
         let isValid = true
 
-        if(!email){
-            setError('Email not found. Please signup again');
+        
+        if(otpValue.length !== 4 || isNaN(Number(otpValue))){
+            setError('Please enter 4 digit valid OTP')
             isValid = false
             return
         
         }
 
-        if(otpValue.length !== 4 || isNaN(Number(otpValue))){
-            setError('Please enter 4 digit valid OTP')
+        if(!email){
+            setError('Email not found. Please signup again');
             isValid = false
             return
         
@@ -122,19 +126,32 @@ const OtpVerify: React.FC = (): React.ReactElement => {
             setError(null)
             const payload: VerifyOtpPayloads = {email, otp: otpValue}
             console.log('Otp submitted at handleSubmit: ', payload)
+            let url = ''
+            if(locationState === 'emailVerificationPage'){
+                url += '/verifyOtpForChangePassword'
+            } else {
+                url += '/verifyOtp'
+            }
             try {
-                const data = await verifyOtp(payload)
+                const data = await verifyOtp(payload, url)
                 if(data){
                     if(data?.status){
                         localStorage.removeItem('userEmail')
+                        localStorage.removeItem('seekerOtpExpiration')
                         toast.success(data.message)
-                        navigate('/login',{replace: true})
+                        setTimeout(() => {
+                            if(locationState === 'emailVerificationPage'){
+                                navigate('/changePassword', {replace: true})
+                            } else {
+                                navigate('/login',{replace: true})
+                            }
+                        }, 500)
                         
                     } else {
                         toast.error(data.message)
                     }
                 }
-                setLoading(false)
+                
             } catch (error: any) {
                 console.log('Error in verify otp at verify otp handleSubmit: ', error.message)
                 toast.error('An unexpected error occur')
@@ -171,7 +188,6 @@ const OtpVerify: React.FC = (): React.ReactElement => {
                 if(data.status){
                     toast.success(data.message)
                 } else {
-                    console.log('ENetererererererererer')
                     toast.error(data.message)
                 }
             }
@@ -214,7 +230,7 @@ const OtpVerify: React.FC = (): React.ReactElement => {
                     <button 
                     type="submit"
                      className="bg-[#24A484] w-full mt-6 py-3 px-3 text-white rounded-md hover:bg-[#298872] transition-colors">
-                        {loading ? <Loader size={18}/> : 'Verify Otp'}
+                        {loading ? <Loader size={60}/> : 'Verify Otp'}
                     </button>
                     </form>
                     <div className="mt-4 text-center text-sm">

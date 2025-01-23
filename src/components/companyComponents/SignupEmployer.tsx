@@ -274,9 +274,9 @@ const SignupEmployer: React.FC = () => {
                 <div className="mt-1">
                 <button 
                 type="submit" 
-                className="w-full py-2.5 px-4 text-sm tracking-wider rounded text-white focus:outline-none relative overflow-hidden group"
+                className="w-full py-2.5 px-4 text-sm tracking-wider rounded-md text-white focus:outline-none relative overflow-hidden group"
                  >
-              <span className="relative z-10">{loading ? <Loader size={16}/> : 'Create account'}</span>
+              <span className="relative z-10">{loading ? <Loader size={60}/> : 'Create account'}</span>
               <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-500 group-hover:opacity-0 transition-opacity duration-300"></div>
               <div className="absolute inset-0 bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
