@@ -22,3 +22,11 @@ export type LoginState = {
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
+
+
+
+export type ChangePasswordState = {
+    email: string;
+    password: string;
+    confirmPassword: string;
+}

@@ -136,12 +136,13 @@ const OtpVerify: React.FC = (): React.ReactElement => {
                 const data = await verifyOtp(payload, url)
                 if(data){
                     if(data?.status){
-                        localStorage.removeItem('userEmail')
                         localStorage.removeItem('seekerOtpExpiration')
                         toast.success(data.message)
                         setTimeout(() => {
                             if(locationState === 'emailVerificationPage'){
-                                navigate('/changePassword', {replace: true})
+                                navigate('/changePassword', {replace: true, state: {
+                                    email: payload.email
+                                }})
                             } else {
                                 navigate('/login',{replace: true})
                             }

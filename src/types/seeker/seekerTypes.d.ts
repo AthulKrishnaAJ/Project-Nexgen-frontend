@@ -15,12 +15,8 @@ export type UserPrimaryDetailsState = {
 }
 
 
-// export type VerifyOtpPayloads = {
-//     email: string | null;
-//     otp: string
-// }
-
-// export type LoginState = {
-//     email: string;
-//     password: string
-// }
+export type ChangePasswordState = {
+    email: string;
+    password: string;
+    confirmPassword: string;
+}

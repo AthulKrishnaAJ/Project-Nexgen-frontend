@@ -1,7 +1,8 @@
 
 // types and interface
 import { UserPrimaryDetailsState } from "../types/seeker/seekerTypes"
-import { VerifyOtpPayloads } from "../types/common/commonTypes"
+import { VerifyOtpPayloads, ChangePasswordState } from "../types/common/commonTypes"
+
 
 //Files
 import { axiosSeeker } from "../utils/axiosUtil"
@@ -79,6 +80,19 @@ export const forgotPassEmailVerify = async (email: string): Promise<any> => {
         return response
     } catch (error: any) {
         console.error('Error in forgotPasswordEmailVerify: ', error)
+        const {data} = error.response
+        toast.error(data.message)
+    }
+}
+
+
+export const changePasswordService = async (datas: ChangePasswordState): Promise<any> => {
+    try {
+        const response = await axiosSeeker.post('/changePassword', datas)
+        console.log('Response changePasswordService after password submission: ', response)
+        return response
+    } catch (error: any) {
+        console.error('Error in changePasswordService at seekerApi service: ', error)
         const {data} = error.response
         toast.error(data.message)
     }

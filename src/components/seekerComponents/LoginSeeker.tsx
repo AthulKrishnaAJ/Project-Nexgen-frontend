@@ -73,6 +73,7 @@ const LoginSeeker: React.FC = (): React.ReactElement => {
             const response = await dispatch(seekerLoginAction(trimData) as any)
             console.log('Response after update the store with seeker data at login component: ', response)
             if(response.payload.success){
+              localStorage.removeItem('userEmail')
               toast.success(response.payload.message)
             } else {
               toast.error(response.payload.message)
