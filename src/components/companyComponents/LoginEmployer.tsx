@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import { useFormik } from 'formik';
-import* as Yup from 'yup'
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -10,23 +9,20 @@ import { employerLoginAction } from '../../redux/actions/companyActions';
 //Styles and icons
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { CiMail } from "react-icons/ci";
-import { Loader } from '../commonComponents/spinner';
 import { toast } from 'sonner';
 
 //Types
-import { LoginState } from '../../types/common/commonTypes';
+import { EmailWithPasswordState } from '../../types/common/commonTypes';
 import { AppDispatch } from '../../types/common/commonTypes';
 
+//Components
+import SubmitButton from '../commonComponents/employer/SubmitButtonEmployer';
 
-const employerLoginValidationSchema = Yup.object().shape({
-  email: Yup.string()
-  .transform((value) => value.trim())
-  .email('Enter valid email')
-  .required('Email is required'),
-  password: Yup.string()
-  .transform((value) => value.trim())
-  .required('password is required')
-})
+//Validation
+import { loginValidationSchema } from '../../validations/commonValidation';
+
+
+
 
 const LoginEmployer: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
@@ -39,18 +35,19 @@ const LoginEmployer: React.FC = () => {
       email: '',
       password: ''
     },
-    validationSchema: employerLoginValidationSchema,
-    onSubmit: async (values: LoginState) => {
+    validationSchema: loginValidationSchema,
+    onSubmit: async (values: EmailWithPasswordState) => {
       setLoading(true)
       const trimData = Object.fromEntries(
         Object.entries(values).map(([key, value]) => [key, value.trim()])
-      ) as LoginState
+      ) as EmailWithPasswordState
 
       try {
         const response = await dispatch(employerLoginAction(trimData) as any)
         console.log('Response after in login component: ', response)
         if(response){
           if(response.payload.success){
+            localStorage.removeItem('employerEmail')
             toast.success(response.payload.message)
           } else {
             toast.error(response.payload.message)
@@ -84,7 +81,8 @@ const LoginEmployer: React.FC = () => {
             <input 
                 id="email"
                 name="email" 
-                className="w-full bg-transparent text-xs text-black border-b border-gray-300 focus:border-themeColor py-2 pl-2 pr-10 outline-none transition-colors duration-300"
+                className={`w-full bg-transparent text-xs text-black border-b
+                ${formik.touched.email && formik.errors.email ? 'border-red-400': 'border-gray-300 focus:border-themeColor'}  py-2 pl-2 pr-10 outline-none transition-colors duration-300`}
                 placeholder="Enter your email"
                 value={formik.values.email}
                 onChange={formik.handleChange}
@@ -108,7 +106,8 @@ const LoginEmployer: React.FC = () => {
                 id='password'
                 name='password'
                 type={showPassword ? 'text' : 'password'}
-                className='w-full bg-transparent text-xs text-black border-b border-gray-300 focus:border-themeColor py-2 pl-2 pr-10 outline-none transition-colors duration-300'
+                className={`w-full bg-transparent text-xs text-black border-b
+                  ${formik.touched.password && formik.errors.password ? 'border-red-400': 'border-gray-300 focus:border-themeColor'}  py-2 pl-2 pr-10 outline-none transition-colors duration-300`}
                 placeholder="Enter your password"
                 value={formik.values.password}
                 onChange={formik.handleChange}
@@ -132,16 +131,12 @@ const LoginEmployer: React.FC = () => {
           <div>
             
           <div className='mb-4'>
-            <p className='text-gray-600 cursor-pointer text-sm font-semibold'>Forgot password ?</p>
+            <p className='text-gray-600 cursor-pointer text-sm font-semibold'
+            >
+              <Link to='/employer/emailVerify'>Forgot password ?</Link>
+            </p>
           </div>
-            <button 
-                  type="submit" 
-                  className="w-full py-2.5 px-4 text-sm tracking-wider rounded-md text-white focus:outline-none relative overflow-hidden group"
-                  >
-                          <span className="relative z-10">{loading ? <Loader size={60}/> : 'Login'}</span>
-                          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-500 group-hover:opacity-0 transition-opacity duration-300"></div>
-                          <div className="absolute inset-0 bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </button>
+              <SubmitButton loading={loading} text='Login'/>
           </div>
           <p className="text-sm text-gray-600 text-center">Don't have an account? 
                 <Link to='/employer/signup' className="text-[#24A484] font-semibold hover:underline ml-1">

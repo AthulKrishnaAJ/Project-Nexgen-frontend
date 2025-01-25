@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 //Files
 import { signupSeeker } from "../../apiServices/seekerApi";
-import signupValidationSchema from "../../validations/signupValidation";
+import {signupValidationSchema} from "../../validations/commonValidation";
 
 //Styles and icons
 import { LuEye } from "react-icons/lu";
@@ -12,11 +12,16 @@ import { LuEyeClosed } from "react-icons/lu";
 import { CiMobile3, CiMail } from "react-icons/ci";
 import signupImg from '../../assets/signupImg.png'
 import { toast } from 'sonner'
-import { Loader } from "../commonComponents/spinner";
+
 
 //Types
-import { passwordTogglingState } from "../../types/seeker/seekerTypes";
+import { passwordTogglingState } from "../../types/common/commonTypes";
 import { UserPrimaryDetailsState } from "../../types/seeker/seekerTypes";
+
+//Components
+import SubmitButtonSeeker from "../commonComponents/seeker/SubmitButtonSeeker";
+
+
 
 
 const SignupSeeker: React.FC = (): React.ReactElement => {
@@ -56,14 +61,11 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
     onSubmit: async (values) => {
       setLoading(true)
 
-      console.log('Before trimming: ', values)
-
       const userData = Object.fromEntries(
         Object.entries(values).map(([key, value]) => [key, value.trim()])
         .filter(([key]) => key !== 'confirmPassword')
       ) as UserPrimaryDetailsState
 
-      console.log('After trimming: ', userData)
 
       const response = await signupSeeker(userData, setLoading)
       console.log('Response after the sending Otp to the mail: ', response)
@@ -104,9 +106,7 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
-                {/* <span className="absolute right-2 text-gray-600">
-                  <CiUser />
-                </span> */}
+
                 </div>
                 {
                   formik.touched.firstName && formik.errors.firstName && (
@@ -124,9 +124,7 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
-                {/* <span className="absolute right-2 text-gray-600">
-                  <CiUser />
-                </span> */}
+
                 </div>
                 {
                   formik.touched.lastName && formik.errors.lastName && (
@@ -233,9 +231,7 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
             </p>
 
             <div className="mt-2 flex ">
-              <button type="submit" className="w-full shadow-xl py-3 px-4 text-sm text-white font-semibold rounded-md bg-[#24A484] hover:bg-[#298872] focus:outline-none transition-colors">
-                {loading ? <Loader size={60}/> : 'Signup'}
-              </button>
+              <SubmitButtonSeeker loading={loading} text="Create account"/>
 
             </div>
           </form>

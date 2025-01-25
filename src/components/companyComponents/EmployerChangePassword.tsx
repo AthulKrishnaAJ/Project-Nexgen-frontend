@@ -4,8 +4,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 
 //Files
-import { changePasswordService } from '../../apiServices/seekerApi'
 import prepareDataForPostApi from '../../utils/prepateDataForPostApis'
+import { employerChangePasswordSerivce } from '../../apiServices/companyApi'
 
 //Styles and icons
 import { LuEye, LuEyeClosed } from 'react-icons/lu'
@@ -15,24 +15,23 @@ import { toast } from 'sonner'
 import { passwordTogglingState } from '../../types/common/commonTypes'
 import { changePasswordValidationSchema } from '../../validations/commonValidation'
 
-//Component
-import SubmitButtonSeeker from '../commonComponents/seeker/SubmitButtonSeeker'
+
+//Components
+import SubmitButton from '../commonComponents/employer/SubmitButtonEmployer'
 
 
 
-const ChangePassword: React.FC = () => {
-
+const EmployerChangePassword: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false)
-    const navigate = useNavigate()
-    const location = useLocation()
-    const email = location.state?.email
-
     const [passwordField, setPasswordField] = useState<passwordTogglingState>({
         password: {type: 'password', icon: <LuEyeClosed/>},
-        confirmPassword: {type: 'password', icon: <LuEye/>}
+        confirmPassword: {type: 'password', icon: <LuEyeClosed/>}
     })
+    const locationState = useLocation().state?.email
+    const navigate = useNavigate()
 
-    const handleToggleState = (field: string) => {
+
+    const handleToggleIcon = (field: string) => {
         setPasswordField((prev: passwordTogglingState) => ({
             ...prev,
             [field]: {
@@ -41,41 +40,39 @@ const ChangePassword: React.FC = () => {
             }
         }))
     }
-
-    
-
     const formik = useFormik({
         initialValues: {
             password: '',
             confirmPassword: '',
-            email: email
+            email: locationState
         },
         validationSchema: changePasswordValidationSchema,
         onSubmit: async (values) => {
             setLoading(true)
-            const trimData = prepareDataForPostApi(values, ['confirmPassword']) 
-
+            const trimData = prepareDataForPostApi(values, ['confirmPassword'])
             try {
-                const response = await changePasswordService(trimData)
+                const response = await employerChangePasswordSerivce(trimData)
                 if(response){
-                    if(response.data?.status){
-                        toast.success(response.data.message)
+                    const {data} = response
+                    if(data.status){
+                        toast.success(data.message)
                         setTimeout(() => {
-                            navigate('/login', {replace: true})
+                            navigate('/employer/login', {replace: true})
                         }, 500)
                     }
                 }
-            } catch (error:any) {
-                console.error('Error in Change password component: ', error.message)
-                toast.error('An unexpected error occur')
+            } catch(error: any){
+                console.error('An Error occur in EmployerChangePassword component: ', error.message)
+                toast.error('An unexpected error occured !')
             } finally {
                 setTimeout(() => {
                     setLoading(false)
                 }, 500)
             }
+
+
         }
     })
-
   return (
         <div className='font-rubik bg-bgThemeColor min-h-screen flex items-center justify-center p-4'>
             <div className='bg-white w-full max-w-md p-12 rounded-lg shadow-lg'>
@@ -103,7 +100,7 @@ const ChangePassword: React.FC = () => {
                     />
  
                     <p className='absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer'
-                    onClick={() => handleToggleState('password')}
+                    onClick={() => handleToggleIcon('password')}
                     > 
                     {passwordField.password.icon}
                     </p>
@@ -129,7 +126,7 @@ const ChangePassword: React.FC = () => {
      
                     />
                     <p className='absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer'
-                    onClick={() => handleToggleState('confirmPassword')}
+                    onClick={() => handleToggleIcon('confirmPassword')}
                     > 
                     {passwordField.confirmPassword.icon}
                     </p>
@@ -139,8 +136,9 @@ const ChangePassword: React.FC = () => {
                     )}
                 </div>
                 <div>
-                    <SubmitButtonSeeker loading={loading} text='Change'/>
+                    <SubmitButton loading={loading} text='Change'/>
                 </div>
+
                 </form>
 
             </div>
@@ -149,4 +147,4 @@ const ChangePassword: React.FC = () => {
   )
 }
 
-export default ChangePassword
+export default EmployerChangePassword

@@ -14,7 +14,7 @@ export type VerifyOtpPayloads = {
     otp: string
 }
 
-export type LoginState = {
+export type EmailWithPasswordState = {
     email: string;
     password: string
 }
@@ -25,8 +25,16 @@ export type AppDispatch = typeof store.dispatch
 
 
 
-export type ChangePasswordState = {
-    email: string;
-    password: string;
-    confirmPassword: string;
+
+export type passwordTogglingState = {
+    [key: string]: {
+        type: string;
+        icon: JSX.Element;
+    }
+}
+
+
+export type SubmitButtonProps = {
+    loading: boolean;
+    text: string
 }

@@ -10,8 +10,11 @@ import { VerifyOtpPayloads } from "../../types/common/commonTypes";
 import { keyboardEvent, formEvent } from "../../types/common/commonTypes";
 
 //Styles and icons
-import { Loader } from "../commonComponents/spinner";
 import {toast} from 'sonner'
+
+//Component
+import SubmitButtonSeeker from '../commonComponents/seeker/SubmitButtonSeeker'
+
 
 
 const OtpVerify: React.FC = (): React.ReactElement => {
@@ -23,7 +26,7 @@ const OtpVerify: React.FC = (): React.ReactElement => {
     const [isTimerActive, setIsTimerActive] = useState<boolean>(true)
     const navigate = useNavigate()
     const location = useLocation()
-    const locationState = location.state
+    const locationState = location.state?.value
     
 
     useEffect(() => {
@@ -228,11 +231,7 @@ const OtpVerify: React.FC = (): React.ReactElement => {
                     
                         </div>
                         {error && <p className="text-red-500 text-xs">{error}</p>}
-                    <button 
-                    type="submit"
-                     className="bg-[#24A484] w-full mt-6 py-3 px-3 text-white rounded-md hover:bg-[#298872] transition-colors">
-                        {loading ? <Loader size={60}/> : 'Verify Otp'}
-                    </button>
+                            <SubmitButtonSeeker loading={loading} text="Verify OTP"/>
                     </form>
                     <div className="mt-4 text-center text-sm">
                         {

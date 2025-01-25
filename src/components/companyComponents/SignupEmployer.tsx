@@ -1,22 +1,23 @@
 import React,{useState} from 'react'
 import { useFormik } from 'formik';
-import * as Yup from 'yup'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 //Styles and Icons
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { CiMobile3, CiMail, CiUser } from "react-icons/ci";
 import signupEmployerImg from '../../assets/signupEmployerImg.png'
-import { Loader } from '../commonComponents/spinner';
 import {toast} from 'sonner'
 
 //Files
 import { signupEmployer } from '../../apiServices/companyApi';
-import signupValidationSchema from '../../validations/signupValidation';
+import {signupValidationSchema} from '../../validations/commonValidation';
 
 
 //types
 import { EmployerPrimaryDetailsState } from '../../types/company/companyTypes';
+
+//Component
+import SubmitButton from "../commonComponents/employer/SubmitButtonEmployer";
 
 
 
@@ -56,7 +57,7 @@ const SignupEmployer: React.FC = () => {
                     const otpExpirationTime = Math.floor(Date.now() / 1000) + 60
                     localStorage.setItem('employerEmail', employerData.email)
                     localStorage.setItem('employerOtpExpiration', otpExpirationTime.toString())
-                    navigate('/employer/otp')
+                    navigate('/employer/otp', {replace: true})
                   }
                 }
             } catch (error: any) {
@@ -272,17 +273,10 @@ const SignupEmployer: React.FC = () => {
                 </div>
     
                 <div className="mt-1">
-                <button 
-                type="submit" 
-                className="w-full py-2.5 px-4 text-sm tracking-wider rounded-md text-white focus:outline-none relative overflow-hidden group"
-                 >
-              <span className="relative z-10">{loading ? <Loader size={60}/> : 'Create account'}</span>
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-500 group-hover:opacity-0 transition-opacity duration-300"></div>
-              <div className="absolute inset-0 bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </button>
+                  <SubmitButton loading={loading} text='Create account'/>
                   <p className="text-sm mt-3 text-center text-gray-800">
                     Already have an account? 
-                    <a href="!#" className="text-themeColor font-semibold hover:underline ml-1">Login here</a>
+                    <Link to="/employer/login" className="text-themeColor font-semibold hover:underline ml-1">Login here</Link>
                   </p>
                 </div>
               </form>

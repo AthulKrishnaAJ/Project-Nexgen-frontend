@@ -1,7 +1,7 @@
 
 // types and interface
 import { UserPrimaryDetailsState } from "../types/seeker/seekerTypes"
-import { VerifyOtpPayloads, ChangePasswordState } from "../types/common/commonTypes"
+import { VerifyOtpPayloads, EmailWithPasswordState } from "../types/common/commonTypes"
 
 
 //Files
@@ -86,7 +86,7 @@ export const forgotPassEmailVerify = async (email: string): Promise<any> => {
 }
 
 
-export const changePasswordService = async (datas: ChangePasswordState): Promise<any> => {
+export const changePasswordService = async (datas: EmailWithPasswordState): Promise<any> => {
     try {
         const response = await axiosSeeker.post('/changePassword', datas)
         console.log('Response changePasswordService after password submission: ', response)

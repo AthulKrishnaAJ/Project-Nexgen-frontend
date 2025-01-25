@@ -1,61 +1,59 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import { useFormik } from 'formik'
 import { useNavigate } from 'react-router-dom'
 
 //Files
-import { forgotPassEmailVerify } from '../../apiServices/seekerApi'
 import { verifyEmailValidationSchema } from '../../validations/commonValidation'
 import prepareDataForPostApi from '../../utils/prepateDataForPostApis'
+import { employerForgotPasswordEmailVerifyService } from '../../apiServices/companyApi'
 
-//Styles and icons
+//Styles and icon
 import { CiMail } from 'react-icons/ci'
 import { toast } from 'sonner'
 
-//Component
-import SubmitButtonSeeker from '../commonComponents/seeker/SubmitButtonSeeker'
+//Components
+import SubmitButton from '../commonComponents/employer/SubmitButtonEmployer'
 
+const ForgotPasswordEmployerEmailVerify: React.FC = () => {
 
-const ForgotPasswordVerifyEmail: React.FC = () => {
-
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState<boolean>(false)
     const navigate = useNavigate()
-
+   
     const formik = useFormik({
-        initialValues:{
+        initialValues: {
             email: ''
         },
         validationSchema: verifyEmailValidationSchema,
         onSubmit: async (values) => {
-            setLoading(true)
-            const trimData = prepareDataForPostApi(values, [])
-            try {
-                const response = await forgotPassEmailVerify(trimData.email)
-
-                console.log('Response after verify email in verify email component: ', response)
+           setLoading(true)
+           const trimData = prepareDataForPostApi(values, [])
+           try {
+                const response = await employerForgotPasswordEmailVerifyService(trimData.email)
                 if(response){
                     const {status, message} = response.data
                     if(status){
                         toast.success(message)
                         const otpExpirationTime = Math.floor(Date.now() / 1000) + 60
-                        localStorage.setItem('userEmail', trimData.email)
-                        localStorage.setItem('seekerOtpExpiration', otpExpirationTime.toString())
-                        navigate('/otp', {state: {
-                            value: 'emailVerificationPage'
+                        localStorage.setItem('employerEmail', trimData.email)
+                        localStorage.setItem('employerOtpExpiration', otpExpirationTime.toString())
+                        navigate('/employer/otp',{state: {
+                            value: 'empoyerEmailVerificationPage'
                         }})
                     }
-                }   
-            } catch (error: any) {
-                console.log('Error after verifying email at verify email component: ', error)
-                toast.error('An unexpected error occured')
-            } finally {
-                setTimeout(() => {
-                    setLoading(false)
-                }, 500)
-            }
+                }
+           } catch (error: any) {
+            console.error('Error in forgotPasswordEmployerEmailVerify component: ', error)
+            toast.error('An unexpected error occur')
+           } finally {
+            setTimeout(() => {
+                setLoading(false)
+            }, 500)
+           }
         }
     })
+
   return (
-        <div className='font-rubik bg-bgThemeColor min-h-screen flex items-center justify-center p-4'>
+    <div className='font-rubik bg-bgThemeColor min-h-screen flex items-center justify-center p-4'>
             <div className='bg-white w-full max-w-md p-12 rounded-lg shadow-lg'>
                 <form className='space-y-8'  onSubmit={formik.handleSubmit}>
                 <div className='text-center'>
@@ -71,12 +69,13 @@ const ForgotPasswordVerifyEmail: React.FC = () => {
                     <input 
                         id="email"
                         name="email" 
-                        className={`w-full bg-transparent text-xs text-black border-b
+                        className={`w-full bg-transparent text-xs text-black border-b 
                          ${formik.touched.email && formik.errors.email ? 'border-red-400' : 'border-gray-300 focus:border-themeColor'} py-2 pl-2 pr-10 outline-none transition-colors duration-300`}
                         placeholder="Enter your email"
                         value={formik.values.email}
-                        onChange={formik.handleChange} 
+                        onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
+          
                     />
                     <CiMail className='absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400'/>
                     </div>
@@ -87,7 +86,7 @@ const ForgotPasswordVerifyEmail: React.FC = () => {
                     }
                 </div>
                 <div>
-                    <SubmitButtonSeeker loading={loading} text='Verify'/>
+                    <SubmitButton loading={loading} text='Verify'/>
                 </div>
 
                 </form>
@@ -98,4 +97,4 @@ const ForgotPasswordVerifyEmail: React.FC = () => {
   )
 }
 
-export default ForgotPasswordVerifyEmail
+export default ForgotPasswordEmployerEmailVerify

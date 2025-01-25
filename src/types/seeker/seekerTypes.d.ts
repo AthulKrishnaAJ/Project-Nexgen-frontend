@@ -1,9 +1,3 @@
-export type passwordTogglingState = {
-    [key: string]: {
-        type: string;
-        icon: JSX.Element;
-    }
-}
 
 
 export type UserPrimaryDetailsState = {

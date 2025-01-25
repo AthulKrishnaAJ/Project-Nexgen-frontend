@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import { useFormik } from "formik";
-import * as Yup from 'yup'
 import { useDispatch } from "react-redux";
 
 //Files
@@ -12,25 +11,20 @@ import loginImg from '../../assets/Secure login-bro.png'
 import { LuEye } from "react-icons/lu";
 import { LuEyeClosed } from "react-icons/lu";
 import { CiMail } from "react-icons/ci";
-import { Loader } from "../commonComponents/spinner";
 import { toast } from "sonner";
 
 //Types
-import { passwordTogglingState } from "../../types/seeker/seekerTypes";
-import { LoginState } from "../../types/common/commonTypes";
+import { passwordTogglingState } from "../../types/common/commonTypes";
+import { EmailWithPasswordState } from "../../types/common/commonTypes";
 import { AppDispatch } from "../../types/common/commonTypes";
 
 
+//Validation
+import { loginValidationSchema } from "../../validations/commonValidation";
 
-const loginValidationSchema = Yup.object().shape({
-    email: Yup.string()
-    .transform((value) => value.trim())
-    .email('Enter valid email address')
-    .required('Field is required'),
-    password: Yup.string()
-    .transform((value) => value.trim())
-    .required('Field is required')
-})
+//Component
+import SubmitButtonSeeker from '../commonComponents/seeker/SubmitButtonSeeker'
+
 
 
 
@@ -63,11 +57,11 @@ const LoginSeeker: React.FC = (): React.ReactElement => {
             password: ''
         },
         validationSchema: loginValidationSchema,
-        onSubmit: async (values: LoginState) => {
+        onSubmit: async (values: EmailWithPasswordState) => {
           setLoading(true)
           const trimData = Object.fromEntries(
                 Object.entries(values).map(([key, value]) => [key, value.trim()])
-                ) as LoginState
+                ) as EmailWithPasswordState
           console.log('Credentials at login page: ', trimData)
           try {
             const response = await dispatch(seekerLoginAction(trimData) as any)
@@ -163,9 +157,7 @@ const LoginSeeker: React.FC = (): React.ReactElement => {
               </div>
 
             <div className="mt-4 flex ">
-              <button type="submit" className="w-full shadow-xl py-3 px-4 text-sm text-white font-semibold rounded-md bg-[#24A484] hover:bg-[#298872] focus:outline-none transition-colors">
-                {loading ? <Loader size={60}/> : 'Login'}
-              </button>
+              <SubmitButtonSeeker loading={loading} text="Login"/>
             </div>
             <p className="text-sm text-gray-600 mt-4">Don't have an account? 
                 <Link to='/signup' className="text-[#24A484] font-semibold hover:underline ml-1">

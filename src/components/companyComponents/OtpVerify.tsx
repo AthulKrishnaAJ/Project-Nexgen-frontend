@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 
 //Api's
@@ -11,8 +11,11 @@ import { VerifyOtpPayloads } from "../../types/common/commonTypes";
 import { keyboardEvent, formEvent } from "../../types/common/commonTypes";
 
 //Styles and icons
-import { Loader } from "../commonComponents/spinner";
 import {toast} from 'sonner'
+
+//Component
+import SubmitButton from "../commonComponents/employer/SubmitButtonEmployer";
+
 
 
 const OtpVerify: React.FC = (): React.ReactElement => {
@@ -23,6 +26,8 @@ const OtpVerify: React.FC = (): React.ReactElement => {
     const [timer, setTimer] = useState<number>(60)
     const [isTimerActive, setIsTimerActive] = useState<boolean>(true)
     const navigate = useNavigate()
+    const location = useLocation()
+    const locationState = location.state?.value
 
     useEffect(() => {
         if(inputRef.current[0]){
@@ -118,13 +123,27 @@ const OtpVerify: React.FC = (): React.ReactElement => {
             setError(null)
             const payload: VerifyOtpPayloads = {email, otp: otpValue}
             console.log('Otp submitted at handleSubmit: ', payload)
+            let url = ''
+            if(locationState === 'empoyerEmailVerificationPage'){
+                url += '/verifyOtpForChangePassword'
+            } else {
+                url += '/verifyOtp'
+            }
             try {
-                const data = await employerVerifyOtp(payload)
+                const data = await employerVerifyOtp(payload, url)
                 if(data){
                     if(data?.status){
-                        localStorage.removeItem('employerEmail')
+                        localStorage.removeItem('employerOtpExpiration')
                         toast.success(data.message)
-                        navigate('/employer/login', {replace: true})
+                        setTimeout(() =>{
+                            if(locationState === 'empoyerEmailVerificationPage'){
+                                navigate('/employer/changePassword', {state: {
+                                    email: payload.email
+                                }})
+                            } else {
+                                navigate('/employer/login', {replace: true})
+                            }
+                        }, 500)
                     } else {
                         toast.error(data.message)
                     }
@@ -202,14 +221,7 @@ const OtpVerify: React.FC = (): React.ReactElement => {
                     
                         </div>
                         {error && <p className="text-red-500 text-xs">{error}</p>}
-                    <button 
-                        type="submit" 
-                        className="w-full py-2.5 px-4 text-sm tracking-wider rounded-md text-white focus:outline-none relative overflow-hidden group"
-                        >
-                            <span className="relative z-10">{loading ? <Loader size={60}/> : 'Verify OTP'}</span>
-                            <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-500 group-hover:opacity-0 transition-opacity duration-300"></div>
-                         <div className="absolute inset-0 bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </button>
+                            <SubmitButton loading={loading} text="Verify OTP"/>
                     </form>
                     <div className="mt-4 text-center text-sm">
                         {
