@@ -20,7 +20,7 @@ import { AppDispatch } from "../../types/common/commonTypes";
 
 
 //Validation
-import { loginValidationSchema } from "../../validations/commonValidation";
+import { loginValidationSchema } from "../../validations/commonValidations";
 
 //Component
 import SubmitButtonSeeker from '../commonComponents/seeker/SubmitButtonSeeker'

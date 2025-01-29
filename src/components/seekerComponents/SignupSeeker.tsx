@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 //Files
 import { signupSeeker } from "../../apiServices/seekerApi";
-import {signupValidationSchema} from "../../validations/commonValidation";
+import {signupValidationSchema} from "../../validations/seekerValidations";
 
 //Styles and icons
 import { LuEye } from "react-icons/lu";

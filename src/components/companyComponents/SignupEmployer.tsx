@@ -4,13 +4,14 @@ import { useNavigate, Link } from 'react-router-dom';
 
 //Styles and Icons
 import { LuEye, LuEyeOff } from "react-icons/lu";
-import { CiMobile3, CiMail, CiUser } from "react-icons/ci";
+import { CiMobile3, CiMail } from "react-icons/ci";
+import { LiaIndustrySolid } from "react-icons/lia";
 import signupEmployerImg from '../../assets/signupEmployerImg.png'
 import {toast} from 'sonner'
 
 //Files
 import { signupEmployer } from '../../apiServices/companyApi';
-import {signupValidationSchema} from '../../validations/commonValidation';
+import { companyValidationSchema } from '../../validations/companyValidations';
 
 
 //types
@@ -30,14 +31,14 @@ const SignupEmployer: React.FC = () => {
 
     const formik = useFormik ({
         initialValues: {
-            firstName: '',
-            lastName: '',
+           companyName: '',
+           industry: '',
             email: '',
             mobile: '',
             password: '',
             confirmPassword: ''
         },
-        validationSchema: signupValidationSchema,
+        validationSchema: companyValidationSchema,
         onSubmit: async (values) => {
             setLoading(true)
             console.log('details in employers sigup form: ', values)
@@ -108,60 +109,61 @@ const SignupEmployer: React.FC = () => {
             <div className="flex items-center h-full px-20 py-10">
               <form className="max-w-lg w-full mx-auto space-y-4" onSubmit={formik.handleSubmit}>
                 <div className="mb-6">
-                  <h3 className="bg-gradient-to-br from-gray-800 to-gray-500 bg-clip-text text-transparent text-2xl font-bold text-center md:text-left">Create an account</h3>
+                  <h3 className="bg-gradient-to-br from-gray-800 to-gray-500 bg-clip-text text-transparent text-2xl font-bold text-center md:text-left">Create an account for your company</h3>
                 </div>
     
                 <div>
-                  <label htmlFor="firstName" className="text-gray-800 text-xs font-semibold block">First Name</label>
+                  <label htmlFor="companyName" className="text-gray-800 text-xs font-semibold block">Company Name</label>
                   <div className="relative flex items-center">
                     <input 
                       type="text"
-                      id="firstName"
-                      name="firstName" 
+                      id="companyName"
+                      name="companyName" 
                       className={`w-full bg-transparent text-xs border-b px-2 py-2 pr-8 outline-none
-                        ${formik.touched.firstName && formik.errors.firstName ? 'border-red-400' : 'border-gray-300 focus:border-themeColor'}`} 
-                      placeholder="Enter first name" 
-                      value={formik.values.firstName}
+                        ${formik.touched.companyName && formik.errors.companyName ? 'border-red-400' : 'border-gray-300 focus:border-themeColor'}`} 
+                      placeholder="Enter company name" 
+                      value={formik.values.companyName}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
-                    <CiUser className="absolute right-2 text-gray-400" />
+                    <LiaIndustrySolid className="absolute right-2 text-gray-400" />
                   </div>
                   {
-                  formik.touched.firstName && formik.errors.firstName && (
+                  formik.touched.companyName && formik.errors.companyName && (
                     <p className="text-red-500 text-xs">
-                      {formik.errors.firstName}
+                      {formik.errors.companyName}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="industry" className="text-gray-800 text-xs font-semibold block">Company Industry</label>
+                  <div className="relative flex items-center">
+                    <input 
+                      type="text"
+                      id="industry"
+                      name="industry" 
+                      className={`w-full bg-transparent text-xs border-b px-2 py-2 pr-8 outline-none
+                        ${formik.touched.industry && formik.errors.industry ? 'border-red-400' : 'border-gray-300 focus:border-themeColor'}`} 
+                      placeholder="Enter your industry" 
+                      value={formik.values.industry}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    <LiaIndustrySolid className="absolute right-2 text-gray-400" />
+                  </div>
+                  {
+                  formik.touched.industry && formik.errors.industry && (
+                    <p className="text-red-500 text-xs">
+                      {formik.errors.industry}
                     </p>
                   )}
                 </div>
     
-                <div>
-                  <label htmlFor="lastName" className="text-gray-800 text-xs font-semibold block">Last Name</label>
-                  <div className="relative flex items-center">
-                    <input 
-                      type="text"
-                      id="lastName"
-                      name="lastName" 
-                      className={`w-full bg-transparent text-xs border-b px-2 py-2 pr-8 outline-none
-                        ${formik.touched.lastName && formik.errors.lastName ? 'border-red-400' : 'border-gray-300 focus:border-themeColor'}`} 
-                      placeholder="Enter last name" 
-                      value={formik.values.lastName}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    <CiUser className="absolute right-2 text-gray-400" />
-                  </div>
-                  {
-                  formik.touched.lastName && formik.errors.lastName && (
-                    <p className="text-red-500 text-xs">
-                      {formik.errors.lastName}
-                    </p>
-                  )
-                }
-                </div>
+
     
                 <div>
-                  <label htmlFor="email" className="text-gray-800 text-xs font-semibold block">Email</label>
+                  <label htmlFor="email" className="text-gray-800 text-xs font-semibold block">Company Email</label>
                   <div className="relative flex items-center">
                     <input 
                       type="email"
@@ -169,7 +171,7 @@ const SignupEmployer: React.FC = () => {
                       name="email" 
                       className={`w-full bg-transparent text-xs border-b px-2 py-2 pr-8 outline-none
                         ${formik.touched.email && formik.errors.email ? 'border-red-400' : 'border-gray-300 focus:border-themeColor'}`} 
-                      placeholder="Enter email" 
+                      placeholder="Enter company's email" 
                       value={formik.values.email}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}

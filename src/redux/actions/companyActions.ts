@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { LoginState } from "../../types/common/commonTypes";
+import { EmailWithPasswordState } from "../../types/common/commonTypes";
 import { axiosCompany } from "../../utils/axiosUtil";
 import httpStatus from "../../utils/httpStatus";
 
@@ -7,7 +7,7 @@ import httpStatus from "../../utils/httpStatus";
 
 
 export const employerLoginAction = createAsyncThunk('employer/login',
-    async({email, password}:LoginState, {rejectWithValue}) => {
+    async({email, password}:EmailWithPasswordState, {rejectWithValue}) => {
         try {
             const response = await axiosCompany.post('/login', {email, password})
             console.log('Response after login submission at companyAction: ', response)

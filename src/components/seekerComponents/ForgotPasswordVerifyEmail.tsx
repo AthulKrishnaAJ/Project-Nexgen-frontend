@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 //Files
 import { forgotPassEmailVerify } from '../../apiServices/seekerApi'
-import { verifyEmailValidationSchema } from '../../validations/commonValidation'
+import { verifyEmailValidationSchema } from '../../validations/commonValidations'
 import prepareDataForPostApi from '../../utils/prepateDataForPostApis'
 
 //Styles and icons

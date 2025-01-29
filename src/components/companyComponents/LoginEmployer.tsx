@@ -19,7 +19,8 @@ import { AppDispatch } from '../../types/common/commonTypes';
 import SubmitButton from '../commonComponents/employer/SubmitButtonEmployer';
 
 //Validation
-import { loginValidationSchema } from '../../validations/commonValidation';
+import { loginValidationSchema } from '../../validations/commonValidations';
+
 
 
 

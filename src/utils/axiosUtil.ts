@@ -30,4 +30,38 @@ export const axiosAdmin = axios.create({
     }
 })
 
+// axiosSeeker.interceptors.response.use(
+//     (response) => {
+//       return response;
+//     },
+//     (error) => {
+//       if (error.response) {
+ 
+//         setTimeout(() => {
+//           window.location.href = "/seeker/login"; 
+//         }, 1500);
+//       }
+   
+//       return Promise.reject(error);
+//     }
+//   );
+
+// axiosCompany.interceptors.response.use(
+//     (response) => {
+//       return response;
+//     },
+//     (error) => {
+//       if (error.response) {
+ 
+//         setTimeout(() => {
+//           window.location.href = "/employer/login"; 
+//         }, 1500);
+//       }
+   
+//       return Promise.reject(error);
+//     }
+//   );
+
+
+
 

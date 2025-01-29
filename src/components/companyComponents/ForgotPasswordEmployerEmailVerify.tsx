@@ -3,7 +3,7 @@ import { useFormik } from 'formik'
 import { useNavigate } from 'react-router-dom'
 
 //Files
-import { verifyEmailValidationSchema } from '../../validations/commonValidation'
+import { verifyEmailValidationSchema } from '../../validations/commonValidations'
 import prepareDataForPostApi from '../../utils/prepateDataForPostApis'
 import { employerForgotPasswordEmailVerifyService } from '../../apiServices/companyApi'
 

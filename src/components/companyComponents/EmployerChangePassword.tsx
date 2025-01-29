@@ -13,7 +13,7 @@ import { toast } from 'sonner'
 
 //Types
 import { passwordTogglingState } from '../../types/common/commonTypes'
-import { changePasswordValidationSchema } from '../../validations/commonValidation'
+import { changePasswordValidationSchema } from '../../validations/commonValidations'
 
 
 //Components
