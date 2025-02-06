@@ -48,23 +48,24 @@ type TableAction = {
     condition: (row: any) => boolean,
     buttonStyle: {
         bgColor: string
-        hoverColor: string
+        hoverClass?:string
     },
-    disabled?:(company: any) => boolean
+    disabled?: (company: any) => boolean
 }
 
 export type TableProps = {
     data: any[];
-    fields: {key: string; label: string}[];
+    fields: { key: string; label: string }[];
     actions: TableAction[];
-    rowsPerPageOptions?: number[]; 
+    rowsPerPageOptions?: number[];
     defaultRowsPerPage?: number;
     rowStyle?: (row: any) => RowStyle;
 }
 
 export type InputModalProps = {
     isVisible: boolean;
-    title: string
+    title: string;
+    loading:boolean;
     onClose: () => void;
     onSubmit: (data: any, action: string, reason?: string) => void;
     data?: any;
@@ -82,4 +83,17 @@ export type ConfirmModalType = {
 export type CustomFooterProps = {
     onAccept: () => void;
     onReject: () => void;
-  }
+}
+
+
+export type ConfirmPopProps = {
+    action?: string;
+    description?: string
+    buttonText?: string;
+    buttonColor: string;
+    hoverClass?: string;
+    callback: (row: any, action: string) => void;
+    data?: any
+    buttonDisabler?: boolean
+
+}

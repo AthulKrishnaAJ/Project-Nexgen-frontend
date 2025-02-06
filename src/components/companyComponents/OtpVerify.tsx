@@ -132,7 +132,7 @@ const OtpVerify: React.FC = (): React.ReactElement => {
             try {
                 const data = await employerVerifyOtp(payload, url)
                 if(data){
-                    if(data?.status){
+                    if(data.status){
                         localStorage.removeItem('employerOtpExpiration')
                         toast.success(data.message)
                         setTimeout(() =>{

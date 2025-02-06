@@ -16,5 +16,20 @@ export type CompanyPrimaryTypeForAdmin = {
     mobile: string;
     blocked: string;
     verify: string;
+    rejection?: {
+        expiryDate?: Date;
+        reason?: string
+    }
+}
+
+
+export type CompanyPrimaryDataForAdminList = {
+    _id: string;
+    companyName: string;
+    industry: string;
+    email: string;
+    mobile: string;
+    blocked: string;
+    verify: string;
 }
 

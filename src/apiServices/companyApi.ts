@@ -19,7 +19,7 @@ export const signupEmployer = async (employerData: EmployerPrimaryDetailsState):
         const {data, status} = error.response
         if(status === httpStatus.CONFLICT){
             toast.warning(data.message)
-        } else if (status === httpStatus.INTERNAL_SERVER_ERROR){
+        } else {
             toast.error(data.message)
         } 
     }
@@ -32,13 +32,8 @@ export const employerVerifyOtp = async (payload: VerifyOtpPayloads, url: string)
         console.log('Response from after otp submission: ', response)
         return response.data
     } catch (error: any) {
-        console.log('Error in verifyOtp at seeker Api service: ', error)
-        const {data, status} = error?.response
-        if(status === httpStatus.CONFLICT){
-            toast.warning(data.message)
-        } else {
-            toast.error(data.message)
-        }
+        console.log('Error in employerVerifyOtp at companiApi service: ', error)
+        toast.error(error?.response?.data?.message)
         
     } 
 }

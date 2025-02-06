@@ -1,10 +1,11 @@
 export interface EmployerStorePrimaryState {
-    employerId: string;
-    firstName: string;
-    lastName: string;
+    _id: string;
+    companyName: string;
+    industry: string;
     email: string;
     mobile: string;
-    blocked: boolean
+    blocked: boolean;
+    verify: string;
 }
 
 export interface EmployerPrimaryState {

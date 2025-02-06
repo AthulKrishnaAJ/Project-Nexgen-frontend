@@ -1,24 +1,20 @@
 import React, { useState } from 'react'
 import { Popconfirm, Button } from 'antd'
 
-interface ConfirmPopProps {
-    action?: string;
-    description?: string
-    buttonText?: string;
-    buttonColor: string;
-    buttonHoverColor:string;
-    callback: (row: any, action: string) => void;
-    data?:any
+//Types and interfaces
+import { ConfirmPopProps } from '../../types/common/commonTypes'
 
-}
 
-const ConfirmPopup: React.FC<ConfirmPopProps> = ({
+
+const ConfirmPopupWithButton: React.FC<ConfirmPopProps> = ({
     action, 
     description,
+    buttonText,
     buttonColor,
-    buttonHoverColor,
+    hoverClass,
     callback,
-    data
+    data,
+    buttonDisabler
 }) => {
     const [open, setOpen] = useState<boolean>(false)
     const [confirmLoading, setConfirmLoding] = useState(false)
@@ -33,11 +29,12 @@ const ConfirmPopup: React.FC<ConfirmPopProps> = ({
         if(data && action){
             callback(data, action)
         }
+      setTimeout(() => {
         setConfirmLoding(false)
         setOpen(false)
+      }, 3000)
 
     }
-
 
     const handleCancel = () => {
         setOpen(false)
@@ -47,21 +44,23 @@ const ConfirmPopup: React.FC<ConfirmPopProps> = ({
    
     <Popconfirm
       placement='topRight'
-      title={action}
+      title={action && action.charAt(0).toUpperCase() + action.slice(1)}
       description={description}
       open={open}
       onConfirm={handleOk}
-      okButtonProps={{ loading: confirmLoading }}
+      okButtonProps={{ loading: confirmLoading, className: 'custom-ok-button'}}
+      cancelButtonProps={{className: 'custom-cancel-button'}}
       onCancel={handleCancel}
     >
       <Button 
-      className={`mr-4 px-3 py-1 font-medium text-white ${buttonColor} ${buttonHoverColor}`}
+      className={`mr-4 px-3 py-1 font-medium text-white ${buttonColor} ${!buttonDisabler ? hoverClass || 'primary-btn' : ''}`}
       onClick={showPopconfirm}
+      disabled={buttonDisabler}
       >
-        {action}
+        {buttonText}
       </Button>
     </Popconfirm>
   )
 }
 
-export default ConfirmPopup
+export default ConfirmPopupWithButton

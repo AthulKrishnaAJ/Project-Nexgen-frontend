@@ -8,14 +8,44 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Marcellus&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rubik:ital,wght@0,300..900;1,300..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 
-/* @import "primereact/resources/themes/lara-light-indigo/theme.css"; 
-@import "primereact/resources/primereact.min.css";
-@import "primeicons/primeicons.css";
-@import "primeflex/primeflex.css";  */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+input:-webkit-autofill {
+    background-color: transparent !important;
+    transition: background-color 5000s ease-in-out 0s; 
+  }
+  
+
+.custom-ok-button {
+    background-color: #24A484 !important;
+    color: white !important;
+  }
+  
+  .custom-ok-button:hover {
+    background-color: #298872 !important; 
+    border-color: #15803d !important;
+  }
+
+  .custom-cancel-button:hover {
+    border-color: gray !important;
+    color: #374151 !important;
+    
+  }
+
+.primary-btn:hover {
+    border-color: #24A484 !important;
+    color: #24A484 !important;
+}
+
+.secondary-btn:hover {
+    border-color: gray !important;
+    color: #374151 !important;
+}
 
 
 
