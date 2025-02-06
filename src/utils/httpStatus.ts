@@ -8,7 +8,8 @@ enum httpStatus {
     CONFLICT = 409,
     Unprocessable_Entity =  422,
     INTERNAL_SERVER_ERROR = 500,
-    NO_CONTENT = 204
+    NO_CONTENT = 204,
+    NOT_MODIFIED = 304
 }
 
 export default httpStatus

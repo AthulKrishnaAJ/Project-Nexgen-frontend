@@ -8,10 +8,20 @@ import { reasonFormValidation } from '../../validations/adminValidations';
 //Types and interface
 import { InputModalProps } from '../../types/common/commonTypes';
 
+//Styles and icons
+import { SquircleLoader } from './spinner';
 
 
-const InputModal: React.FC<InputModalProps> = ({isVisible, title, onClose, onSubmit, data, action}) => {
 
+const InputModal: React.FC<InputModalProps> = ({
+    isVisible, 
+    title,
+    loading, 
+    onClose, 
+    onSubmit, 
+    data, 
+    action
+}) => {
 
     if(!isVisible){
         return null
@@ -22,9 +32,9 @@ const InputModal: React.FC<InputModalProps> = ({isVisible, title, onClose, onSub
             reason: ''
         },
         validationSchema: reasonFormValidation,
-        onSubmit: (values) => {
+        onSubmit: (values) =>  {
             onSubmit(data, action as string, values.reason)
-            onClose()
+            
         }
     })
 
@@ -40,7 +50,7 @@ const InputModal: React.FC<InputModalProps> = ({isVisible, title, onClose, onSub
                     <div className="my-6">
                         <textarea
                         name='reason'
-                        placeholder="Enter the reason for rejection..."
+                        placeholder="Type here..."
                         className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
                         rows={4}
                         value={formik.values.reason}
@@ -56,16 +66,16 @@ const InputModal: React.FC<InputModalProps> = ({isVisible, title, onClose, onSub
                         <button
                         type="button"
                         
-                        className="px-4 py-2 rounded-lg text-gray-800 text-sm border-none outline-none tracking-wide bg-gray-300 hover:bg-gray-300 active:"
+                        className="px-3 py-2 rounded-lg text-gray-800 text-sm border-none outline-none tracking-wide bg-gray-300 hover:bg-gray-300 active:"
                         onClick={() => onClose()}
                         >
                         Cancel
                         </button>
                         <button
                         type="submit"
-                        className="px-4 py-2 rounded-lg text-white text-sm border-none outline-none tracking-wide bg-gray-800 hover:bg-gray-900  duration-100"
+                        className="w-[80px] h-[40px] flex justify-center items-center px-3 py-2 rounded-lg text-white text-sm border-none outline-none tracking-wide bg-gray-800 hover:bg-gray-900  duration-100"
                         >
-                        Submit
+                        {loading ? <SquircleLoader size={20}/> : 'Submit'}
                         </button>
                     </div>
         </form>

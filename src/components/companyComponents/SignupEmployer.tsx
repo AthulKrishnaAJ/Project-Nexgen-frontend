@@ -2,6 +2,7 @@ import React,{useState} from 'react'
 import { useFormik } from 'formik';
 import { useNavigate, Link } from 'react-router-dom';
 
+
 //Styles and Icons
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { CiMobile3, CiMail } from "react-icons/ci";
@@ -11,11 +12,10 @@ import {toast} from 'sonner'
 
 //Files
 import { signupEmployer } from '../../apiServices/companyApi';
+import prepareDataForPostApi from '../../utils/prepateDataForPostApis';
+
+//Validations
 import { companyValidationSchema } from '../../validations/companyValidations';
-
-
-//types
-import { EmployerPrimaryDetailsState } from '../../types/company/companyTypes';
 
 //Component
 import SubmitButton from "../commonComponents/employer/SubmitButtonEmployer";
@@ -43,10 +43,7 @@ const SignupEmployer: React.FC = () => {
             setLoading(true)
             console.log('details in employers sigup form: ', values)
 
-            const employerData = Object.fromEntries(
-                    Object.entries(values).map(([key, value]) => [key, value.trim()])
-                    .filter(([key]) => key !== 'confirmPassword')
-                  ) as EmployerPrimaryDetailsState
+            const employerData = prepareDataForPostApi(values, ['confirmPassword'])
 
             try {
                 const response = await signupEmployer(employerData)

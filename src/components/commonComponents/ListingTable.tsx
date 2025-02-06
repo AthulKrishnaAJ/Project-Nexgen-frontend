@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 
 //Components
-import ConfirmPopup from './ConfirmPopup';
-
+import ConfirmPopupWithButton from './ConfirmPopup';
 
 //Types and interfaces
 import { TableProps } from '../../types/common/commonTypes';
 import { RowStyle } from '../../types/common/commonTypes';
+
+
 
 const ListingTable: React.FC<TableProps> = (
     {
@@ -67,12 +68,13 @@ const ListingTable: React.FC<TableProps> = (
                             action.condition && 
                                 action.condition(row) && (
                                    
-                                    <ConfirmPopup
+                                    <ConfirmPopupWithButton
                                       key={actionIndex}
                                       action={action.label}
                                       description={`Are you sure to ${action.label.toLocaleLowerCase()} this user`}
+                                      buttonText={action.label}
                                       buttonColor={buttonStyle.bgColor}
-                                      buttonHoverColor={buttonStyle.hoverColor}
+                                      hoverClass={buttonStyle.hoverClass}
                                       callback={action.callback}
                                       data={row}
                                     />

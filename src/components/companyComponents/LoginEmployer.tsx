@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 //Files
 import { employerLoginAction } from '../../redux/actions/companyActions';
@@ -28,6 +28,7 @@ import { loginValidationSchema } from '../../validations/commonValidations';
 const LoginEmployer: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
 
 
@@ -45,13 +46,22 @@ const LoginEmployer: React.FC = () => {
 
       try {
         const response = await dispatch(employerLoginAction(trimData) as any)
+
         console.log('Response after in login component: ', response)
+
         if(response){
           if(response.payload.success){
             localStorage.removeItem('employerEmail')
             toast.success(response.payload.message)
+
           } else {
-            toast.error(response.payload.message)
+
+            if(response.payload.message === 'Rejection period has been ended, Please signup'){
+                toast.warning(response.payload.message)
+                navigate('/employer/signup', {replace: true})
+            } else {
+              toast.error(response.payload.message)
+            }
           }
         }
       } catch (error: any) {

@@ -7,13 +7,15 @@ import { getAllCompaniesService, companyVerificationSerivce } from '../../apiSer
 
 //Components
 import InputModal from '../commonComponents/InputModal'
+import ConfirmPopupWithButton from '../commonComponents/ConfirmPopup'
 
 
 //Types and interfaces
-import { CompanyPrimaryTypeForAdmin } from '../../types/admin/adminTypes'
+import { CompanyPrimaryTypeForAdmin, CompanyPrimaryDataForAdminList } from '../../types/admin/adminTypes'
 
 //Styles and icons
-import { toast } from 'sonner'
+// import { toast } from 'sonner'
+import {message, Button} from 'antd'
 
 
 
@@ -27,6 +29,7 @@ const CompaniesListAdmin: React.FC = () => {
         const [rowsPerPage, setRowsPerPage] = useState<number>(5)
         const [rejectionModalVisible, setRejectionModalVisible] = useState<boolean>(false)
         const [selectedCompanyEmail, setSelectedCompanyEmail] = useState<string | null>(null)
+        const [inputModalLoading, setInputModalLoading] = useState<boolean>(false)
 
         const totalPages = Math.ceil(companyDatas.length / rowsPerPage)
         const startIdx = (currentPage - 1) * rowsPerPage
@@ -49,9 +52,16 @@ const CompaniesListAdmin: React.FC = () => {
                                     verify: 'Pending'
                                 }
                             }
+                            let remainingDays = 0
+                            if(item.verify === 'reject' && item.rejection?.expiryDate){
+                                let currentDate = new Date()
+                                // currentDate.setMonth(currentDate.getMonth() + 6)
+                                let endDate = new Date(item.rejection.expiryDate)
+                                remainingDays = Math.ceil((endDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24))
+                            }
                             return {
                                 ...item,
-                                verify: item.verify === 'accept' ? 'Verified' : 'Rejected'
+                                verify: item.verify === 'accept' ? 'Verified' : `Rejection ${remainingDays > 0 ? `ends afer ${remainingDays} days` : 'period has been end'}`
                             }
                         })
                         setCompanaiesData(buildData)
@@ -61,7 +71,7 @@ const CompaniesListAdmin: React.FC = () => {
                 }
             } catch (error: any) {
                 console.error('Error in fetchCompanies at CompanyListAdmin component: ', error.message)
-                toast.error('An unexpected error occur while finding companies')
+                message.error('An unexpected error occur while finding companies')
             }
         }
         fetchCompanies()
@@ -71,15 +81,32 @@ const CompaniesListAdmin: React.FC = () => {
     const handleAcceptAndReject = async (email: string, action: string, reason?:string) => {
         try {
             const response = await companyVerificationSerivce(email, action, reason)
+            closeModal()
             if(response?.data?.status){
-                toast.success(`Company ${action === 'accept' ? 'accepted' : 'rejected'} successful`)
+                const expiryDate = response?.data?.companyData?.rejection?.expiryDate
+                message.success(`Company has been ${action === 'accept' ? 'accepted' : 'rejected'}`)
                 setCompanaiesData((prev) => 
-                    prev.map((company) => company.email === email ? {...company, verify: action === 'accept' ? 'Verified' : 'Rejected'} : company)
-                )
+                    prev.map((company) => {
+                        if(company.email === email){
+                            if(action === 'accept'){
+                                return {...company, verify: 'Verified'}
+                            } else {
+                                let currentDate = new Date()
+                                let endDate = new Date(expiryDate)
+                                let remainingDays = Math.ceil((endDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24))
+                                return {
+                                    ...company,
+                                    verify: `Rejection ends after ${remainingDays} days`
+                                }
+                            }
+                        }
+                        return company
+                    })
+                );
             }
         } catch (error: any) {
             console.log('Error in handlAcceptAndReject companyListing component: ', error.message)
-            toast.error('An unexpected error occur')
+            message.error('An unexpected error occur')
         }
     }
 
@@ -91,18 +118,21 @@ const CompaniesListAdmin: React.FC = () => {
     const closeModal = () => {
         setSelectedCompanyEmail(null)
         setRejectionModalVisible(false)
+        setInputModalLoading(false)
     }
 
     const handleModalSubmit = (email: string, action: string, reason?: string) => {
         if(selectedCompanyEmail){
+            setInputModalLoading(true)
             handleAcceptAndReject(email, action, reason)
         }
     }
 
-    const handleAccept = (email: string) => {
-
-
-
+    const handleAccept = (email: string, action: string) => {
+        if(email && action){
+            handleAcceptAndReject(email, action)
+        }
+       
     }
 
 
@@ -143,26 +173,30 @@ const CompaniesListAdmin: React.FC = () => {
                    <tr key={rowIndex}>
                        {fields.map((field) => (
                            <td key={field.key} className={`p-4 text-sm font-medium `}>
-                                   {company[field.key as keyof CompanyPrimaryTypeForAdmin]}
+                                   {company[field.key as keyof CompanyPrimaryDataForAdminList]}
                            </td>
        
                        ))}
              
                         <td className="p-4 text-sm">
-                           <button
-                                className={`mr-4 px-3 py-1 ${company.verify !== 'Pending' ? 'bg-gray-400 text-black' : 'bg-themeColor text-white hover:bg-hoverThemeColor'} bg- rounded `}
-                                onClick={() => handleAccept(company.email)}
-                                disabled={company.verify !== 'Pending'}
-                                >
-                                Accept
-                                </button>
-                            <button
-                                className={`mr-4 px-3 py-1 ${company.verify !== 'Pending' ? 'bg-gray-400 text-black' : 'bg-gray-800 text-white hover:bg-gray-900'} bg- rounded `}
+                                <ConfirmPopupWithButton
+                                key={rowIndex}
+                                action='accept'
+                                description='Are you sure to accept this company'
+                                buttonText='Accept'
+                                buttonColor='bg-themeColor'
+                                callback={handleAccept}
+                                data={company.email}
+                                buttonDisabler={company.verify !== 'Pending'}
+                                />
+
+                            <Button
+                                className={`mr-4 px-3 py-1 bg-gray-800 text-white ${company.verify === 'Pending' ? 'secondary-btn' : ''}`}
                                 onClick={() => openModal(company.email)}
                                 disabled={company.verify !== 'Pending'}
                                 >
                                 Reject
-                                </button>
+                                </Button>
                         </td>
                    </tr>
                  )
@@ -195,7 +229,7 @@ const CompaniesListAdmin: React.FC = () => {
                <div className="flex space-x-1">
                  <button type="button" 
                         className={`px-3 py-2 text-sm rounded-md ${
-                        currentPage === 1 ? 'bg-gray-200' : 'hover:bg-blue-100'
+                        currentPage === 1 ? 'bg-gray-200' : 'hover:bg-bgThemeColor'
                         }`}
                         disabled={currentPage === 1}
                         onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -205,7 +239,7 @@ const CompaniesListAdmin: React.FC = () => {
        
                 <button type="button" 
                         className={`px-3 py-2 text-sm rounded-md ${
-                        currentPage === totalPages ? 'bg-gray-200' : 'hover:bg-blue-100'
+                        currentPage === totalPages ? 'bg-gray-200' : 'hover:bg-bgThemeColor'
                         }`}
                         disabled={currentPage === totalPages}
                         onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
@@ -220,6 +254,7 @@ const CompaniesListAdmin: React.FC = () => {
          <InputModal
             isVisible={rejectionModalVisible}
             title='Rejection Reason'
+            loading={inputModalLoading}
             onClose={closeModal}
             onSubmit={handleModalSubmit}
             data={selectedCompanyEmail}

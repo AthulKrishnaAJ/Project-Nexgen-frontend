@@ -5,13 +5,12 @@ import { getAllSeekersService, seekerBlockUnblockService } from '../../apiServic
 
 //Components
 import ListingTable from '../commonComponents/ListingTable'
-import ConfirmPopup from '../commonComponents/ConfirmPopup'
 
 //Types and interfaces
 import { SeekerPrimaryType } from '../../types/admin/adminTypes'
 
 //Styles and icons
-import { toast } from 'sonner'
+import {message} from 'antd'
 
 
 
@@ -36,7 +35,7 @@ const SeekersListAdmin: React.FC = () => {
                 setUserData(buildData)
             } catch (error: any) {
                 console.error('Error in SeekerListAdmin component: ', error)
-                toast.error('An unexpected error occur while finding all seekers')
+                message.error('An unexpected error occur while finding all seekers')
             }
         }
         fetchUsers()
@@ -50,6 +49,7 @@ const SeekersListAdmin: React.FC = () => {
             if(response){
                 const {status, userData} = response.data
                 if(status){
+                    message.success(`User has been ${action}ed`)
                     setUserData((prevData) => 
                        prevData.map((item) => 
                         item._id === seekerId ? {
@@ -62,7 +62,7 @@ const SeekersListAdmin: React.FC = () => {
             }
         } catch (error: any) {
             console.error('Error in blockUnblock in SeekerListAdmin component: ', error.message)
-            toast.error('An undexpected error occur while block or unblock seekers')
+            message.error('An undexpected error occur while block or unblock seekers')
         }
     }
 
@@ -92,7 +92,7 @@ const SeekersListAdmin: React.FC = () => {
             condition: (user) => user.status === 'Active',
             buttonStyle: {
                 bgColor: 'bg-gray-700',
-                hoverColor: 'hover:bg-gray-800'
+                hoverClass:'secondary-btn'
             }
            },
            {
@@ -101,7 +101,7 @@ const SeekersListAdmin: React.FC = () => {
             condition: (user) => user.status === 'Blocked',
             buttonStyle: {
                 bgColor: 'bg-themeColor',
-                hoverColor: 'hover:hoverThemeColor'
+                
             }
            }
         ]}
