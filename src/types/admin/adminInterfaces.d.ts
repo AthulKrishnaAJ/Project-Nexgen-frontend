@@ -1,5 +1,8 @@
 interface AdminStorePrimaryState {
-    email: string 
+    email: string;
+    role: string;
+    accessToken: string;
+    refreshToken: string;
 }
 
 export interface AdminPrimaryState {

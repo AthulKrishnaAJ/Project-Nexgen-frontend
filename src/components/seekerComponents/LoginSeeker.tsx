@@ -99,9 +99,9 @@ const LoginSeeker: React.FC = (): React.ReactElement => {
                bg-gradient-to-br from-gray-800 to-gray-500 bg-clip-text text-transparent">
                 Login
                 </h3>
-                <p className="text-xs mt-2 bg-gradient-to-br from-gray-800 to-gray-500 bg-clip-text text-transparent">
-                    Hello, welcome back to your account
-                    </p>
+                <p className="text-xs mt-2 text-gray-400">
+                Hello, please log in to access your activity.
+                </p>
             </div>
 
             <div className="mt-4">

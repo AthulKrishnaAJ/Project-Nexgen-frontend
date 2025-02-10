@@ -82,8 +82,8 @@ const LoginEmployer: React.FC = () => {
           <div className='text-center'>
             <h2 className='text-2xl font-semibold
              bg-gradient-to-br from-gray-800 to-gray-600 bg-clip-text text-transparent'>Login</h2>
+            <p className='text-xs my-2 text-gray-400'>Hello, please login to access your activity.</p>
           </div>
-
           <div>
             <label htmlFor="email" className='block text-sm font-medium text-gray-700 mb-1'>
               Email

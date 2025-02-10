@@ -6,6 +6,8 @@ export interface EmployerStorePrimaryState {
     mobile: string;
     blocked: boolean;
     verify: string;
+    accessToken?: string;
+    role?: string;
 }
 
 export interface EmployerPrimaryState {

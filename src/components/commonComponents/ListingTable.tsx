@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 //Components
 import ConfirmPopupWithButton from './ConfirmPopup';
 
+
 //Types and interfaces
 import { TableProps } from '../../types/common/commonTypes';
 import { RowStyle } from '../../types/common/commonTypes';
@@ -18,8 +19,10 @@ const ListingTable: React.FC<TableProps> = (
       defaultRowsPerPage = 5,
       rowStyle
     }) => {
+
     const [currentPage, setCurrentPage] = useState(1)
     const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage)
+
 
     const totalPages = Math.ceil(data.length / rowsPerPage)
     const startIdx = (currentPage - 1) * rowsPerPage
@@ -49,46 +52,55 @@ const ListingTable: React.FC<TableProps> = (
       </thead>
      
 
-      <tbody className="whitespace-nowrap ">
-        {paginatedData.map((row, rowIndex) => {
-          const style: RowStyle = rowStyle?.(row) || {}
-          return (
-            <tr key={rowIndex}>
-                {fields.map((field) => (
-                    <td key={field.key} className={`p-4 text-sm font-medium ${ style.textColor || ''}`}>
-                            {row[field.key]}
-                    </td>
+      <tbody className="whitespace-nowrap">
+        { paginatedData.length > 0 ? (
+            paginatedData.map((row, rowIndex) => {
+              const style: RowStyle = rowStyle?.(row) || {}
+              return (
+                <tr key={rowIndex}>
+                    {fields.map((field) => (
+                        <td key={field.key} className={`p-4 text-sm font-medium ${ style.textColor || ''}`}>
+                                {row[field.key]}
+                        </td>
 
-                ))}
-                {actions.length > 0 && (
-                    <td className="p-4 text-sm">
-                        {actions.map((action, actionIndex) => {
-                          const buttonStyle = action.buttonStyle || {};
-                          return (
-                            action.condition && 
-                                action.condition(row) && (
-                                   
-                                    <ConfirmPopupWithButton
-                                      key={actionIndex}
-                                      action={action.label}
-                                      description={`Are you sure to ${action.label.toLocaleLowerCase()} this user`}
-                                      buttonText={action.label}
-                                      buttonColor={buttonStyle.bgColor}
-                                      hoverClass={buttonStyle.hoverClass}
-                                      callback={action.callback}
-                                      data={row}
-                                    />
+                    ))}
+                    {actions.length > 0 && (
+                        <td className="p-4 text-sm">
+                            {actions.map((action, actionIndex) => {
+                              const buttonStyle = action.buttonStyle || {};
+                              return (
+                                action.condition && 
+                                    action.condition(row) && (
+                                      
+                                        <ConfirmPopupWithButton
+                                          key={actionIndex}
+                                          action={action.label}
+                                          description={`Are you sure to ${action.label.toLocaleLowerCase()} this user`}
+                                          buttonText={action.label}
+                                          buttonColor={buttonStyle.bgColor}
+                                          hoverClass={buttonStyle.hoverClass}
+                                          callback={action.callback}
+                                          data={row}
+                                        />
 
-                                    
-                                )
-                            ) 
-                           
-                        })}
-                    </td>
-                )}
-            </tr>
-          )
-        })}
+                                        
+                                    )
+                                ) 
+                              
+                            })}
+                        </td>
+                    )}
+                </tr>
+              )
+            })
+        
+      ) : (
+        <tr>
+          <td colSpan={fields.length + 1} className='p-4 text-center text-gray-500'>
+              No users here...
+          </td>
+        </tr>
+      )}
       </tbody>
     </table>
 

@@ -12,13 +12,19 @@ const initialState: AdminPrimaryState = {
 const adminSlice = createSlice({
     name: 'admin',
     initialState,
-    reducers: {},
+    reducers: {
+        clearAdminState: (state) => {
+            state.adminInfo = null
+        },
+
+    },
     extraReducers: (builder) => {
         builder
             .addCase(adminLoginAction.fulfilled, (state, action) => {
                 state.adminInfo = action.payload?.adminData
+                console.log('admin datas: ', state.adminInfo)
             })
     }
 })
-
+export const {clearAdminState} = adminSlice.actions
 export default adminSlice.reducer

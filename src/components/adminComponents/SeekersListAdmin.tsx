@@ -5,6 +5,7 @@ import { getAllSeekersService, seekerBlockUnblockService } from '../../apiServic
 
 //Components
 import ListingTable from '../commonComponents/ListingTable'
+import ComponentLoaderAdmin from '../commonComponents/admin/ComponentLoaderAdmin'
 
 //Types and interfaces
 import { SeekerPrimaryType } from '../../types/admin/adminTypes'
@@ -18,24 +19,32 @@ import {message} from 'antd'
 
 const SeekersListAdmin: React.FC = () => {
     const [userDatas, setUserData] = useState<SeekerPrimaryType[]>([])
+    const [componentLoading, setComponentLoading] = useState<boolean>(true)
+    
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 const response = await getAllSeekersService()
-                let buildData = response.data.userData.map((item: SeekerPrimaryType) => {
-                    const {firstName, lastName, ...rest} = item
-                    return {
-                        ...rest,
-                        name: `${firstName} ${lastName}`,
-                        status: item.blocked ? 'Blocked' : 'Active'
-                    }
-                })
-                console.log(buildData)
-                setUserData(buildData)
+                if(response?.data?.status){
+                    let buildData = response.data.userData.map((item: SeekerPrimaryType) => {
+                        const {firstName, lastName, ...rest} = item
+                        return {
+                            ...rest,
+                            name: `${firstName} ${lastName}`,
+                            status: item.blocked ? 'Blocked' : 'Active'
+                        }
+                    })
+                    console.log(buildData)
+                    setUserData(buildData)
+                }
             } catch (error: any) {
                 console.error('Error in SeekerListAdmin component: ', error)
                 message.error('An unexpected error occur while finding all seekers')
+            } finally {
+                setTimeout(() => {
+                    setComponentLoading(false)
+                }, 1000)
             }
         }
         fetchUsers()
@@ -75,38 +84,44 @@ const SeekersListAdmin: React.FC = () => {
   return (
     <>
         <h1 className="text-2xl font-semibold font-rubik text-gray-700">Seeker Listing</h1>
-  
         <div className='mt-4'>
-        <ListingTable
-        data={userDatas}
-        fields={[
-            { key: 'name', label: 'Name' },
-            { key: 'email', label: 'Email' },
-            { key: 'mobile', label: 'Mobile' },
-            { key: 'status', label: 'Status' },
-        ]}
-        actions={[
-           {
-            label: 'Block',
-            callback: blockAndUnblock,
-            condition: (user) => user.status === 'Active',
-            buttonStyle: {
-                bgColor: 'bg-gray-700',
-                hoverClass:'secondary-btn'
-            }
-           },
-           {
-            label: 'Unblock',
-            callback: blockAndUnblock,
-            condition: (user) => user.status === 'Blocked',
-            buttonStyle: {
-                bgColor: 'bg-themeColor',
-                
-            }
-           }
-        ]}
-        rowStyle={rowStyle}
-        />
+        {componentLoading ? (
+            <div className='flex items-center justify-center h-[60vh] w-full'>
+                <ComponentLoaderAdmin/>
+            </div>
+        ) : (
+            <ListingTable
+            data={userDatas}
+            fields={[
+                { key: 'name', label: 'Name' },
+                { key: 'email', label: 'Email' },
+                { key: 'mobile', label: 'Mobile' },
+                { key: 'status', label: 'Status' },
+            ]}
+            actions={[
+               {
+                label: 'Block',
+                callback: blockAndUnblock,
+                condition: (user) => user.status === 'Active',
+                buttonStyle: {
+                    bgColor: 'bg-gray-700',
+                    hoverClass:'secondary-btn'
+                }
+               },
+               {
+                label: 'Unblock',
+                callback: blockAndUnblock,
+                condition: (user) => user.status === 'Blocked',
+                buttonStyle: {
+                    bgColor: 'bg-themeColor',
+                    
+                }
+               }
+            ]}
+            rowStyle={rowStyle}
+            />
+        )}
+
         </div>
     </>
   )
