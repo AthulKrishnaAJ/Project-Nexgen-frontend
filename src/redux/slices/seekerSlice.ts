@@ -12,11 +12,16 @@ const initialState: SeekerPrimaryState = {
 const seekerSlice = createSlice({
     name: 'seeker',
     initialState,
-    reducers: {},
+    reducers: {
+        clearSeekerState: (state) => {
+            state.seekerInfo = null
+        }
+    },
     extraReducers: (builder) =>  {
         builder
             .addCase(seekerLoginAction.fulfilled, (state, action) => {
                 state.seekerInfo = action.payload?.userData
+                console.log('in seeker slice',state.seekerInfo)
             })
     }
 })

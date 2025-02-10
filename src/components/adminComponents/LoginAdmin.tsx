@@ -46,7 +46,7 @@ const LoginAdmin: React.FC = () => {
                 if(response){
                     if(response.payload.success){
                         toast.success(response.payload.message)
-                        navigate('/admin/dashboard')
+                        navigate('/admin/dashboard', {replace: true})
                     } else {
                         toast.error(response.payload.message)
                     }

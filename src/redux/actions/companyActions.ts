@@ -6,7 +6,7 @@ import httpStatus from "../../utils/httpStatus";
 
 
 
-export const employerLoginAction = createAsyncThunk('employer/login',
+export const employerLoginAction = createAsyncThunk('company/login',
     async({email, password}:EmailWithPasswordState, {rejectWithValue}) => {
         try {
             const response = await axiosCompany.post('/login', {email, password})

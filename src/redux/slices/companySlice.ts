@@ -9,9 +9,13 @@ const initialState: EmployerPrimaryState = {
 
 
 const companySlice = createSlice({
-    name: 'employer',
+    name: 'company',
     initialState,
-    reducers: {},
+    reducers: {
+        clearCompanyState: (state) => {
+            state.employerInfo = null
+        }
+    },
     extraReducers: (builder) => {
         builder.
             addCase(employerLoginAction.fulfilled, (state, action) => {

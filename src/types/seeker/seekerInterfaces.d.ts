@@ -5,6 +5,8 @@ export interface SeekerStorePrimaryState {
     email: string;
     mobile: string;
     blocked: boolean
+    accessToken?: string;
+    role?: string
 }
 
 
