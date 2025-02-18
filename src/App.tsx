@@ -13,7 +13,6 @@ function App() {
         <Route path="/*" element={<SeekerRoutes/>}></Route> 
         <Route path="/employer/*" element={<EmployerRoutes/>}></Route>
         <Route path="/admin/*" element={<AdminRoutes/>}></Route>
-
       </Routes>
     </BrowserRouter>
   )

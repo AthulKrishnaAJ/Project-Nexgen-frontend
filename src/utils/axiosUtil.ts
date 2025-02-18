@@ -1,7 +1,9 @@
 import axios from 'axios'
 import store from '../redux/store'
 import httpStatus from './httpStatus'
-import { clearAdminState } from '../redux/slices/adminSlice'
+import { clearAdminState, updateAdminToken } from '../redux/slices/adminSlice'
+import { clearCompanyState, updateCompanyToken } from '../redux/slices/companySlice'
+import { clearSeekerState, updateSeekerToken } from '../redux/slices/seekerSlice'
 
 
 const seekerUrl = 'http://localhost:9009/api/seeker'
@@ -51,13 +53,19 @@ axiosSeeker.interceptors.request.use(
 
 
 axiosSeeker.interceptors.response.use (
-    (response) => response,
+    (response) => {
+        const newAccessToken: string = response.headers?.authorization?.split(' ')[1];
+        if(newAccessToken){
+            store.dispatch(updateSeekerToken(newAccessToken))
+        }
+        return response
+    },
     (error) => {
         if(error.response?.status === (httpStatus.UNAUTHORIZED || httpStatus.FORBIDDEN)){
-         
-            setTimeout(() => {
-                window.location.href = '/login'
-            }, 1000)
+         store.dispatch(clearSeekerState())
+            // setTimeout(() => {
+            //     window.location.href = '/login'
+            // }, 1000)
         }
         return Promise.reject(error)
     }
@@ -81,17 +89,24 @@ axiosCompany.interceptors.request.use(
 
 
 axiosCompany.interceptors.response.use(
-    (response) => response,
+    (response) => {
+        const newAccessToken: string = response.headers?.authorization?.split(' ')[1];
+        if(newAccessToken){
+            store.dispatch(updateCompanyToken(newAccessToken))
+        }
+        return response
+    },
     (error) => {
         if(error.response?.status === (httpStatus.UNAUTHORIZED || httpStatus.FORBIDDEN)){
-
-            setTimeout(() => {
-                window.location.href = '/employer/login'
-            }, 1000)
+            store.dispatch(clearCompanyState())
+            // setTimeout(() => {
+            //     window.location.href = '/employer/login'
+            // }, 1000)
         }
         return Promise.reject(error)
     }
 )
+
 
 
 // Admin
@@ -111,13 +126,19 @@ axiosAdmin.interceptors.request.use(
 
 
 axiosAdmin.interceptors.response.use(
-    (response) => response,
+    (response) => {
+        const newAccessToken: string = response.headers?.authorization?.split(' ')[1];
+        if(newAccessToken){
+            store.dispatch(updateAdminToken(newAccessToken))
+        }
+        return response
+    },
     (error) => {
         if(error.response?.status === (httpStatus.UNAUTHORIZED || httpStatus.FORBIDDEN)){
             store.dispatch(clearAdminState())
-            setTimeout(() => {
-                window.location.href = '/admin/login'
-            }, 1000)
+            // setTimeout(() => {
+            //     window.location.href = '/admin/login'
+            // }, 1000)
         }
         return Promise.reject(error)
     }

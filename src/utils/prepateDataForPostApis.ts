@@ -1,16 +1,19 @@
 const prepareDataForPostApi = (values: any, excludeKey: string[]): any => {
+    const trimmedData: any = {};
 
-    if(excludeKey.length === 0){
-        return Object.fromEntries(
-            Object.entries(values).map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
-        )
+    for (const key in values) {
+        if (excludeKey.includes(key)) {
+            trimmedData[key] = values[key]; 
+        } else if (Array.isArray(values[key])) {
+            trimmedData[key] = values[key].map((item: string) => item.trim()).filter((item: string) => item !== "");
+        } else if (typeof values[key] === "string") {
+            trimmedData[key] = values[key].trim();
+        } else {
+            trimmedData[key] = values[key];
+        }
     }
 
-    return Object.fromEntries(
-        Object.entries(values)
-        .filter(([key]) => !excludeKey.includes(key))
-        .map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
-    )
-}
+    return trimmedData;
+};
 
 export default prepareDataForPostApi

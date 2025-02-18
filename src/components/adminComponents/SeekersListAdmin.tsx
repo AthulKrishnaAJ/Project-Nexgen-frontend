@@ -44,7 +44,7 @@ const SeekersListAdmin: React.FC = () => {
             } finally {
                 setTimeout(() => {
                     setComponentLoading(false)
-                }, 1000)
+                }, 500)
             }
         }
         fetchUsers()

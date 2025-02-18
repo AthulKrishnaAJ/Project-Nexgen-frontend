@@ -1,3 +1,5 @@
+import React from "react";
+
 export type EmployerPrimaryDetailsState = {
     firstName: string;
     lastName: string;
@@ -5,3 +7,6 @@ export type EmployerPrimaryDetailsState = {
     mobile: string;
     password: string;
 }
+
+
+export type ArraySetState = React.Dispatch<React.SetStateAction<string[]>>

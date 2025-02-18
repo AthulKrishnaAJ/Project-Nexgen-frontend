@@ -33,3 +33,54 @@ export const companyValidationSchema = Yup.object({
     .required('Confirm password is required')
     .oneOf([Yup.ref('password')], 'Password must match')
 })
+
+
+
+export const jobPostValidationSchema = Yup.object({
+  title: Yup.string().trim()
+  .required("Job title is required"),
+  location: Yup.string().trim()
+  .required("Location is required"),
+  employmentType: Yup.string()
+  .oneOf(["Full-time", "Part-time", "Internship"], "Select a valid employment type")
+  .required("Employment type is required"),
+  workMode: Yup.string()
+  .oneOf(["On-site", "Hybrid", "Remote"], "Select a valid work mode")
+  .required("Work mode is required"),
+  minSalary: Yup.string().trim()
+  .required("Minimum salary is required")
+  .matches(/^-?\d+$/, "Must contain only numbers") 
+  .test("isPositive", "Salary must be greater than 0", (value) => 
+    value ? parseInt(value) > 0 : true
+  ),
+  maxSalary: Yup.string().trim()
+  .required("Maximum salary is required")
+  .matches(/^-?\d+$/, "Must contain only numbers") 
+   .test("isPositive", "Salary must be greater than 0", (value) =>
+     value ? parseInt(value) > 0 : true
+   )
+   .test("isGreaterThanMin", "Maximum salary must be greater than minimum salary", function(value) {
+     return value && parseInt(this.parent.minSalary) ? 
+       parseInt(value) > parseInt(this.parent.minSalary) : true;
+   }),
+  skills: Yup.array()
+  .min(1, "At least one skill is required")
+  .test("noEmptyValues", "Skills cannot contain empty values", (values) => {
+    if (!values) return false;
+    return values.every((item) => item && item.trim && item.trim() !== "");
+  }),
+  requirements: Yup.array()
+  .min(1, "At least one requirement is required")
+  .test("noEmptyValues", "Requirements cannot contain empty values", (values) => {
+    if (!values) return false;
+    return values.every((item) => item && item.trim && item.trim() !== "");
+  }),
+  benefits: Yup.array()
+  .min(1, "At least one benefit is required")
+  .test("noEmptyValues", "Benefits cannot contain empty values", (values) => {
+    if (!values) return false;
+    return values.every((item) => item && item.trim && item.trim() !== "");
+  }),
+  description: Yup.string().trim()
+  .required("Job description is required"),
+});

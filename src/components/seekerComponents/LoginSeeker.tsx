@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 
@@ -32,6 +32,7 @@ const LoginSeeker: React.FC = (): React.ReactElement => {
 
     const dispatch = useDispatch<AppDispatch>()
     const [loading, setLoading] = useState<boolean>(false)
+    const navigate = useNavigate()
     const [field, setField] = useState<passwordTogglingState>({
         password: {
             type: 'password',
@@ -66,9 +67,12 @@ const LoginSeeker: React.FC = (): React.ReactElement => {
           try {
             const response = await dispatch(seekerLoginAction(trimData) as any)
             console.log('Response after update the store with seeker data at login component: ', response)
-            if(response.payload.success){
+            if(response?.payload?.success){
               localStorage.removeItem('userEmail')
               toast.success(response.payload.message)
+              setTimeout(() => {
+                navigate('/', {replace: true})
+              }, 500)
             } else {
               toast.error(response.payload.message)
             }

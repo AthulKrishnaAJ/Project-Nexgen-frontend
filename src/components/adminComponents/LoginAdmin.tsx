@@ -3,8 +3,6 @@ import { useFormik } from 'formik'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-
-//Files
 import prepareDataForPostApi from '../../utils/prepateDataForPostApis'
 import { adminLoginAction } from '../../redux/actions/adminActions'
 
@@ -46,7 +44,7 @@ const LoginAdmin: React.FC = () => {
                 if(response){
                     if(response.payload.success){
                         toast.success(response.payload.message)
-                        navigate('/admin/dashboard', {replace: true})
+                        navigate('/admin', {replace: true})
                     } else {
                         toast.error(response.payload.message)
                     }

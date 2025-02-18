@@ -19,7 +19,7 @@ export type EmailWithPasswordState = {
     password: string
 }
 
-
+//Store and dispatch type
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 
@@ -48,7 +48,7 @@ type TableAction = {
     condition: (row: any) => boolean,
     buttonStyle: {
         bgColor: string
-        hoverClass?:string
+        hoverClass?: string
     },
     disabled?: (company: any) => boolean
 }
@@ -65,7 +65,7 @@ export type TableProps = {
 export type InputModalProps = {
     isVisible: boolean;
     title: string;
-    loading:boolean;
+    loading: boolean;
     onClose: () => void;
     onSubmit: (data: any, action: string, reason?: string) => void;
     data?: any;
@@ -96,4 +96,31 @@ export type ConfirmPopProps = {
     data?: any
     buttonDisabler?: boolean
 
+}
+
+
+export type FooterProps = {
+    socialLinks: { icon: React.ReactNode, link: string }[];
+    useFullLinks: { text: string, link: string }[];
+    information: { text: string, link: string }[];
+}
+
+
+export type AlertDialogProps = {
+    title: string;
+    description: string;
+    onConfirm: () => void;
+    confirmLabel: string;
+    cancelLabel?: string;
+    open: boolean;
+    openChange: (open: boolean) => void
+}
+
+
+
+export type DropDownProps = {
+    menuLabel: string;
+    menuNavigations: { label: string; link: string }[];
+    menuExicutors: { label: string; icon: JSX.Element; exicutor: () => void }[];
+    triggerElement: JSX.Element
 }
