@@ -15,6 +15,11 @@ const seekerSlice = createSlice({
     reducers: {
         clearSeekerState: (state) => {
             state.seekerInfo = null
+        },
+        updateSeekerToken: (state, action) => {
+            if(state.seekerInfo){
+                state.seekerInfo.accessToken = action.payload
+            }
         }
     },
     extraReducers: (builder) =>  {
@@ -26,5 +31,5 @@ const seekerSlice = createSlice({
     }
 })
 
-
+export const {clearSeekerState, updateSeekerToken} = seekerSlice.actions
 export default seekerSlice.reducer

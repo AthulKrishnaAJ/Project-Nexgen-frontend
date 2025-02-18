@@ -1,5 +1,7 @@
+import React from "react"
 import EmployerChangePassword from "../../components/companyComponents/EmployerChangePassword"
-const EmployerChangePasswordPage = () => {
+
+const EmployerChangePasswordPage: React.FC = () => {
   return (
     <div>
       <EmployerChangePassword/>

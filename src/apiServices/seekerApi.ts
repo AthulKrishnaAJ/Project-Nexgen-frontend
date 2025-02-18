@@ -98,3 +98,11 @@ export const changePasswordService = async (datas: EmailWithPasswordState): Prom
     }
 }
 
+
+export const editProfileService = async (data) => {
+    try {
+        
+    } catch (error) {
+        
+    }
+}

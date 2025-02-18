@@ -17,6 +17,12 @@ const adminSlice = createSlice({
             state.adminInfo = null
         },
 
+        updateAdminToken: (state, action) => {
+            if(state.adminInfo){
+                state.adminInfo.accessToken = action.payload 
+            }
+        }
+
     },
     extraReducers: (builder) => {
         builder
@@ -26,5 +32,5 @@ const adminSlice = createSlice({
             })
     }
 })
-export const {clearAdminState} = adminSlice.actions
+export const {clearAdminState, updateAdminToken} = adminSlice.actions
 export default adminSlice.reducer

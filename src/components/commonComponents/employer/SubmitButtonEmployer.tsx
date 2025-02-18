@@ -3,7 +3,7 @@ import { MirageLoader } from '../spinner'
 import { SubmitButtonProps } from '../../../types/common/commonTypes'
 
 
-const SubmitButton: React.FC<SubmitButtonProps> = ({loading, text}) => {
+const SubmitButtonEmployer: React.FC<SubmitButtonProps> = ({loading, text}) => {
   return (
     <>
     <button 
@@ -18,4 +18,4 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({loading, text}) => {
   )
 }
 
-export default SubmitButton
+export default SubmitButtonEmployer

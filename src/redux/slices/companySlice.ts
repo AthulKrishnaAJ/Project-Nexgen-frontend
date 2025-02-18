@@ -14,6 +14,11 @@ const companySlice = createSlice({
     reducers: {
         clearCompanyState: (state) => {
             state.employerInfo = null
+        },
+        updateCompanyToken: (state, action) => {
+            if(state.employerInfo){
+                state.employerInfo.accessToken = action.payload
+            }
         }
     },
     extraReducers: (builder) => {
@@ -25,5 +30,5 @@ const companySlice = createSlice({
     }
 })
 
-
+export const {clearCompanyState, updateCompanyToken} = companySlice.actions
 export default companySlice.reducer

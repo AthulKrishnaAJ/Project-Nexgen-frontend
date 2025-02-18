@@ -53,6 +53,7 @@ const LoginEmployer: React.FC = () => {
           if(response.payload.success){
             localStorage.removeItem('employerEmail')
             toast.success(response.payload.message)
+            navigate('/employer', {replace: true})
 
           } else {
 

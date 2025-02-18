@@ -4,6 +4,7 @@ import httpStatus from "../utils/httpStatus";
 
 //Types and interfaces
 import { EmployerPrimaryDetailsState } from "../types/company/companyTypes";
+import { JobPostState } from "../types/company/comapanyInterfaces";
 import { VerifyOtpPayloads, EmailWithPasswordState } from "../types/common/commonTypes";
 
 //Styles and Icons
@@ -29,7 +30,6 @@ export const signupEmployer = async (employerData: EmployerPrimaryDetailsState):
 export const employerVerifyOtp = async (payload: VerifyOtpPayloads, url: string): Promise<any> => {
     try {
         const response = await axiosCompany.post(url, payload)
-        console.log('Response from after otp submission: ', response)
         return response.data
     } catch (error: any) {
         console.log('Error in employerVerifyOtp at companiApi service: ', error)
@@ -41,7 +41,6 @@ export const employerVerifyOtp = async (payload: VerifyOtpPayloads, url: string)
 export const employerForgotPasswordEmailVerifyService = async (email: string): Promise<any> => {
     try {
         const response = await axiosCompany.post('/emailVerify', {email})
-        console.log('Response in employerForgotPasswordEmailVerifyService after email submission: ', response)
         return response
     } catch (error: any) {
         console.error('Error in employerForgotPasswordEmailVerifyService after email submission: ', error)
@@ -53,13 +52,24 @@ export const employerForgotPasswordEmailVerifyService = async (email: string): P
 
 export const employerChangePasswordSerivce = async (payload: EmailWithPasswordState) => {
     try {
-        console.log('payloadssssss: ', payload)
+
         const response = await axiosCompany.post('/changePassword', payload)
-        console.log('Response in employerChangePasswordSerivce after changing password: ', response)
         return response
     } catch (error: any) {
         console.log('Error in employerChangePasswordService at companyApi: ', error)
-        let message = error.response?.data?.message
-        toast.error(message)
+        let errorMessage = error.response?.data?.message
+        toast.error(errorMessage)
+    }
+}
+
+
+export const companyJobPostService = async (payload: JobPostState) => {
+    try {
+        const response = await axiosCompany.post('/jobPost', payload)
+        return response
+    } catch (error: any) {
+        console.error('Error in companyJobPostService at companyApi: ', error)
+        let errorMessage = error.response?.data?.message
+        toast.error(errorMessage)
     }
 }
