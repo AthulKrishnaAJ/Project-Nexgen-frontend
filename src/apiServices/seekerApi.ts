@@ -4,6 +4,7 @@ import { UserPrimaryDetailsState } from "../types/seeker/seekerTypes"
 import { VerifyOtpPayloads, EmailWithPasswordState } from "../types/common/commonTypes"
 
 
+
 //Files
 import { axiosSeeker } from "../utils/axiosUtil"
 import httpStatus from "../utils/httpStatus"
@@ -80,8 +81,7 @@ export const forgotPassEmailVerify = async (email: string): Promise<any> => {
         return response
     } catch (error: any) {
         console.error('Error in forgotPasswordEmailVerify: ', error)
-        const {data} = error.response
-        toast.error(data.message)
+        toast.error(error.response?.data?.message)
     }
 }
 
@@ -93,16 +93,30 @@ export const changePasswordService = async (datas: EmailWithPasswordState): Prom
         return response
     } catch (error: any) {
         console.error('Error in changePasswordService at seekerApi service: ', error)
-        const {data} = error.response
-        toast.error(data.message)
+        toast.error(error.response?.data?.message)
     }
 }
 
 
-export const editProfileService = async (data) => {
+export const fetchSeekerDetailsService = async (seekerId: string): Promise<any> => {
     try {
-        
-    } catch (error) {
+        const response = axiosSeeker.get(`/getSeeker/${seekerId}`)
+        return response
+    } catch (error: any) {
+        console.error('Error in changePasswordService at seekerApi service: ', error)
+        toast.error(error.response?.data?.message)
         
     }
 }
+
+
+export const fetchAllJobsService = async () => {
+    try {
+        const response = axiosSeeker.get('/getJobs')
+        return response
+    } catch (error: any) {
+        console.error('Error in changePasswordService at seekerApi service: ', error)
+        toast.error(error.response?.data?.message)
+    }
+}
+

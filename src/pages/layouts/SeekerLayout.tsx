@@ -33,7 +33,7 @@ const SeekerLayout: React.FC = () => {
   return (
     <div className='flex flex-col min-h-screen bg-bgThemeColor'>
       <HeaderSeeker/>
-      <main className='flex-1 p-4 font-rubik'>
+      <main className='flex-1 font-rubik'>
         <Outlet/>
       </main>
       <Footer 

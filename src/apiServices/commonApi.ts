@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-export const fetchStatesAndCities = async (pincode: string) => {
+export const fetchStatesAndCitiesService = async (pincode: string) => {
     try {
         const response = await axios.get(`https://api.postalpincode.in/pincode/${pincode}`)
         return response?.data[0]?.PostOffice

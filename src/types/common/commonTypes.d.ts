@@ -124,3 +124,12 @@ export type DropDownProps = {
     menuExicutors: { label: string; icon: JSX.Element; exicutor: () => void }[];
     triggerElement: JSX.Element
 }
+
+type Column = {
+    key:string;
+    label:string;
+}
+export type TableProp<T> = {
+    columns: Column[]
+    data: T[]
+}

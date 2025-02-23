@@ -63,6 +63,14 @@ export const jobPostValidationSchema = Yup.object({
      return value && parseInt(this.parent.minSalary) ? 
        parseInt(value) > parseInt(this.parent.minSalary) : true;
    }),
+   minExperience: Yup.string().trim()
+   .required('Minimum experience is required'),
+   maxExperience: Yup.string().trim()
+   .required('Maximum experience is required')
+   .test('max-greater-than-min', 'Maximum experience must be greater than minimum', function (value) {
+    const { minExperience } = this.parent; 
+    return !minExperience || !value || parseInt(value) > parseInt(minExperience);
+  }),
   skills: Yup.array()
   .min(1, "At least one skill is required")
   .test("noEmptyValues", "Skills cannot contain empty values", (values) => {

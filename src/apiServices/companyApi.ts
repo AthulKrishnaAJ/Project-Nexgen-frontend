@@ -57,8 +57,7 @@ export const employerChangePasswordSerivce = async (payload: EmailWithPasswordSt
         return response
     } catch (error: any) {
         console.log('Error in employerChangePasswordService at companyApi: ', error)
-        let errorMessage = error.response?.data?.message
-        toast.error(errorMessage)
+        toast.error(error?.response?.data?.message)
     }
 }
 
@@ -69,7 +68,28 @@ export const companyJobPostService = async (payload: JobPostState) => {
         return response
     } catch (error: any) {
         console.error('Error in companyJobPostService at companyApi: ', error)
-        let errorMessage = error.response?.data?.message
-        toast.error(errorMessage)
+        toast.error(error?.response?.data?.message)
+    }
+}
+
+
+export const fetchJobDetails = async (companyId: string) => {
+    try {
+        const response = await axiosCompany.get(`/getJobs/${companyId}`)
+        return response
+    } catch (error:any) {
+        console.error('Error in fetchJobDetails at companyApi: ', error)
+        toast.error(error?.response?.data?.message)
+    }
+}
+
+
+export const changeJobStatusService = async (jobId: string, status: string) => {
+    try {
+        const response = await axiosCompany.post('/changeJobStatus', {jobId, status})
+        return response
+    } catch (error: any) {
+        console.error('Error in changeJobStatusService at companyApi: ', error)
+        toast.error(error?.response?.data?.message)
     }
 }
