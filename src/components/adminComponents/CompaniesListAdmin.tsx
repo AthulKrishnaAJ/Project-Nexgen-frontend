@@ -155,7 +155,6 @@ const CompaniesListAdmin: React.FC = () => {
   return (
     <>
         <h1 className="text-2xl font-semibold font-rubik text-gray-700">Companies Listing</h1>
-        
             {componentLoading ? (
                 <div className='flex items-center justify-center h-[60vh] w-full'>
                     <ComponentLoaderAdmin/>

@@ -22,8 +22,18 @@ export interface JobPostState {
     workMode: string;
     minSalary:string;
     maxSalary: string;
+    minExperience:string;
+    maxExperience:string;
     skills:string[];
     requirements: string[];
     benefits:string[];
     description: string;      
+}
+
+export interface JobListingState {
+    id: string;
+    title: string;
+    location: string;
+    workMode: string;
+    status: string;
 }

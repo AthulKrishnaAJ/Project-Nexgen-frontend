@@ -1,19 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+
+
+
+import { formatDate } from '@/utils/dateFormation';
 
 // Dummy components for the dynamic sections
 const SkillSection = () => <div>Skill Section Content</div>;
-const ResumeSection = () => <div>Resume Section Content</div>;
+const ResumeSection = () => {
+    return (
+        <div className="">
+            resume
+        </div>
+    )
+}
 const PersonalInfoSection = () => <div>Personal Info Section Content</div>;
 
-//Types and icons
+//Api's
+import { fetchSeekerDetailsService } from '@/apiServices/seekerApi';
+
+//Styles and icons
 import { FiEdit } from "react-icons/fi";
+import { CiLocationOn, CiMail  } from "react-icons/ci";
+
+//Types and Interfaces
+import { RootState } from '@/types/common/commonTypes';
+import { SeekerProfileDatas } from '@/types/seeker/seekerInterfaces';
+
 
 const ProfileSeeker: React.FC = () => {
-  // State to track the active section
-  const [activeSection, setActiveSection] = useState<string>('skills');
 
-  // Function to render the active section
+  const seekerInfo = useSelector((state: RootState) => state.seeker?.seekerInfo)
+  const [activeSection, setActiveSection] = useState<string>('skills');
+  const [seekerData, setSeekerData] = useState<SeekerProfileDatas | null>(null)
+
+  useEffect(() => {
+        const fetchSeeker = async () => {
+            try {
+                const response = await fetchSeekerDetailsService(seekerInfo?._id as string)
+                if(response?.data){
+                    setSeekerData(response.data?.seekerData)
+                }
+            } catch (error: any) {
+                console.error('Error in fetching seeker detail in profile component: ', error.message)
+            }
+        }
+        fetchSeeker()
+  }, [])
+  
+
+ 
   const renderSection = () => {
     switch (activeSection) {
       case 'skills':
@@ -27,48 +65,84 @@ const ProfileSeeker: React.FC = () => {
     }
   };
 
+
   return (
-    <div className="flex min-h-screen font-rubik">
+
+    <div className="flex p-4 font-rubik">
     <div className="w-1/3 bg-white p-6 shadow-md rounded-lg h-1/2">
-      <div className="flex">
-        <img
-          className="w-28 h-28 rounded-3xl object-cover mb-4 border-2 border-themeColor"
-          src="https://i.pinimg.com/736x/8e/01/bd/8e01bdd405c7ca524c1a345210a6e04d.jpg"
-          alt="User profile"
-        />
-        <div className='self-center mx-4'>
-            <h1 className="text-2xl font-semibold text-gray-800">User Name</h1>
-            <p className="text-gray-600 mt-2">user@example.com</p>
-            <p className="text-gray-600">Location: City, Country</p>
+    <div className="flex space-x-6">
+      <img
+        className="w-24 h-24 rounded-3xl object-cover border-2 border-gray-300"
+        src="https://i.pinimg.com/736x/8e/01/bd/8e01bdd405c7ca524c1a345210a6e04d.jpg"
+        alt="User profile"
+      />
+
+      <div className="flex-1">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-semibold text-gray-800">{`${seekerData?.firstName} ${seekerData?.lastName}`}</h1>
+          <Link
+            to="/editProfile"
+            className="flex items-center space-x-1 text-gray-800 text-sm hover:text-themeColor-dark transition cursor-pointer"
+          >
+            <FiEdit />
+            <span>Edit</span>
+          </Link>
         </div>
-        <Link to='/editProfile'>
-            <p className='mt-9 ml-6 cursor-pointer'>
-                <FiEdit/>
-            </p>
-        </Link>
+        <div className="mt-2 space-y-1">
+          <div className="flex items-center text-gray-600">
+            <CiMail className="text-md mr-2" />
+            <span className='text-sm'>{seekerData?.email}</span>
+          </div>
+            {seekerData?.state && seekerData?.city && (
+          <div className="flex items-center text-gray-600">
+            <CiLocationOn className="text-md mr-2" />
+            <span className='text-sm'>{`${seekerData?.state}, ${seekerData?.city}`}</span>
+          </div>
+            )}
+        </div>
       </div>
-      <div>
-      <h2 className="text-xl font-semibold text-gray-800 mb-2">About</h2>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit obcaecati
-         error expedita odio. Odit eaque sapiente impedit temporibus ea! Laudantium voluptas
-          consectetur quaerat beatae ab mollitia corporis, deleniti obcaecati. Tempore.
-          </p>
+    </div>
+
+    {seekerData?.bio && (
+      <div className='pt-4 border-b pb-4'>
+            <h2 className="text-lg font-semibold text-gray-800 mb-2">About</h2>
+            <p className='text-sm text-gray-700 overflow-hidden text-ellipsis whitespace-pre-wrap'>
+                {seekerData?.bio}
+                </p>
       </div>
-      <div className="mt-6 border-t pt-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">Personal Information</h2>
-        <ul className="space-y-2 text-gray-700">
-          <li>Phone: +1 234 567 890</li>
-          <li>Date of Birth: January 1, 1990</li>
-          <li>Gender: Male</li>
-          <li>Languages: English, Spanish</li>
-        </ul>
+    )}
+      <div className="pt-4">
+        <h2 className="text-lg font-semibold text-gray-800 mb-2">Personal Information</h2>
+        <ul className="space-y-2 text-sm">
+            <li>
+                <span className="font-medium text-gray-800">Mobile:</span> 
+                <span className="ml-2 text-gray-700">{seekerData?.mobile}</span>
+            </li>
+         
+                <li>
+                    <span className="font-medium text-gray-800">Pincode:</span> 
+                    <span className="ml-2 text-gray-700">{seekerData?.pincode || '___'}</span>
+                </li>
+           
+         
+                <li>
+                    <span className="font-medium text-gray-800">Date of Birth:</span> 
+                    <span className="ml-2 text-gray-700">
+                        {seekerData?.dateOfBirth ? formatDate(seekerData?.dateOfBirth as string) : '___'}
+                        </span>
+                </li>
+    
+            <li>
+                <span className="font-medium text-gray-800">Gender:</span> 
+                <span className="ml-2 text-gray-700">{seekerData?.gender || '___'}</span>
+            </li>
+  </ul>
       </div>
     </div>
 
 
     <div className="flex-1 flex flex-col">
-      <div className="bg-white shadow-md mx-6 rounded-lg h-3/4">
+      <div className="bg-white shadow-md mx-6 rounded-lg h-2/3">
         <ul className="flex justify-start space-x-4 p-1">
           {["skills", "resume", "personalInfo"].map((section) => (
             <li key={section}>
@@ -78,7 +152,7 @@ const ProfileSeeker: React.FC = () => {
                 }`}
                 onClick={() => setActiveSection(section)}
               >
-                {section.charAt(0).toUpperCase() + section.slice(1)}
+                
               </button>
             </li>
           ))}

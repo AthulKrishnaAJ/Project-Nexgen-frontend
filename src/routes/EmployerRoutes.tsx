@@ -12,6 +12,7 @@ import EmployerChangePasswordPage from "../pages/companyPages/EmployerChangePass
 import CompanyLayout from "../pages/layouts/CompanyLayout";
 import DashboardContentCompany from "../components/companyComponents/DashboardContentCompany";
 import JobPostCompany from "../components/companyComponents/JobPostCompany";
+import JobListCompany from "@/components/companyComponents/JobListCompany";
 
 
 
@@ -29,6 +30,7 @@ const EmployerRoutes = () => {
                     <Route element={<CompanyLayout/>}>
                         <Route path="/" element={<DashboardContentCompany/>}></Route>
                         <Route path="jobPost" element={<JobPostCompany/>}></Route>
+                        <Route path="jobs" element={<JobListCompany/>}></Route>
                     </Route>
                 </Route>
 

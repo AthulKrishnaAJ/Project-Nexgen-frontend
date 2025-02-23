@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 //Apis
 import { companyJobPostService } from '../../apiServices/companyApi';
@@ -11,6 +12,7 @@ import prepareDataForPostApi from '../../utils/prepateDataForPostApis';
 //Styles and icons
 import { IoIosAdd } from "react-icons/io";
 import { toast } from 'sonner';
+import { AiOutlineDelete } from "react-icons/ai";
 
 //Components
 import SubmitButtonEmployer from '../commonComponents/employer/SubmitButtonEmployer';
@@ -26,6 +28,7 @@ import { jobPostValidationSchema } from '../../validations/companyValidations';
 const JobPostCompany: React.FC = () => {
     const companyId = useSelector((state: RootState) => state?.company?.employerInfo?._id)
     const [loading, setLoading] = useState<boolean>(false)
+    const navigate = useNavigate()
 
     const formik = useFormik({
         initialValues: {
@@ -35,6 +38,8 @@ const JobPostCompany: React.FC = () => {
             workMode: "",
             minSalary: "",
             maxSalary: "",
+            minExperience: "",  
+            maxExperience: "",  
             skills: [],
             requirements: [],
             benefits: [],
@@ -49,6 +54,9 @@ const JobPostCompany: React.FC = () => {
                 const response = await companyJobPostService(formData)
                 if(response?.data?.status){
                     toast.success(response.data.message)
+                    setTimeout(() => {
+                        navigate('/employer/jobs')
+                    }, 500)
                 }
             } catch (error) {
                 console.error('Error in jobPost form component: ', error)
@@ -75,9 +83,20 @@ const JobPostCompany: React.FC = () => {
         { label: "Maximum Salary", name: "maxSalary" },
       ];
 
+      const experienceFields: {label:string; name: keyof typeof formik.values; options: string[]}[] = [
+        { label: "Minimum Experience", name: "minExperience", options: ["0","1", "2", "3", "4", "5"] },
+        { label: "Maximum Experience", name: "maxExperience", options: ["1", "2", "3", "4","5", "6", "7", "8+"] }
+      ]
+
 
       const addField = (field: keyof typeof formik.values) => {
         formik.setFieldValue(field, [...formik.values[field], ''])
+      }
+
+      const removeField = (field: keyof typeof formik.values, index: number) => {
+            const updateArray = [...formik.values[field]]
+            updateArray.splice(index, 1)
+            formik.setFieldValue(field, updateArray)
       }
 
 
@@ -163,6 +182,30 @@ const JobPostCompany: React.FC = () => {
                     )}
                 </div>
             ))}
+
+            {experienceFields.map((field) => (
+                       <div key={field.name}>
+                       <label className='block text-gray-700 text-xs'>{field.label}</label>
+                       <select 
+                       name={field.name} 
+                       className={`w-full text-sm p-2 border ${formik.touched[field.name] && formik.errors[field.name] ? 
+                           'border-red-400' : 'border-gray-300'} outline-none rounded mt-1`} 
+                       value={formik.values[field.name]}
+                       onChange={formik.handleChange}
+                       onBlur={formik.handleBlur}
+                       >
+                           <option value="">Select {field.label}</option>
+                           {field.options.map((item, index) => (
+                               <option key={index} value={item}>
+                                   {item} Years
+                               </option>
+                           ))}
+                       </select>
+                       {formik.touched[field.name] && formik.errors[field.name] && (
+                           <p className="text-red-500 text-xs">{formik.errors[field.name]}</p>
+                       )}
+                   </div>
+            ))}
         </div>
 
 
@@ -173,18 +216,18 @@ const JobPostCompany: React.FC = () => {
                     <div className='flex items-center justify-between'>
                         <label className='block text-gray-700 text-xs font-semibold'>{field.label}</label>
 
-                            <div className='flex text-sm cursor-pointer'
+                        <div className='flex text-xs cursor-pointer bg-themeColor text-white px-2 py-1 border border-gray-300 rounded-md'
                             onClick={() => addField(field.name)}
                             >
-                            <p className=''>add</p>
+                            <p>add</p>
                             <IoIosAdd className='self-center'/>
                         </div>
 
                     </div>
 
                         {formik.values[field.name] && (formik.values[field.name] as string[]).map((item, index) => (
+                            <div key={index} className='flex items-center' >
                             <input 
-                            key={index}
                             type="text" 
                             value={item}
                             placeholder='Enter here...'
@@ -197,6 +240,14 @@ const JobPostCompany: React.FC = () => {
                             }}
                             onBlur={() => formik.setFieldTouched(`${field.name}[${index}]`, true)}
                             />
+                                <button
+                                type='button'
+                                className="ml-2 text-red-500 hover:text-red-700"
+                                onClick={() => removeField(field.name, index)}
+                                >
+                                    <AiOutlineDelete size={20}/>
+                                </button>
+                            </div>
                         ))}
                         {formik.touched[field.name] && formik.errors[field.name] && (
                              <p className="text-red-500 text-xs">{formik.errors[field.name]}</p>
