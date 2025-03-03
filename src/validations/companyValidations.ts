@@ -20,6 +20,14 @@ export const companyValidationSchema = Yup.object({
   .required('Mobile number is required')
   .matches(/^\d+$/, 'Mobile number must contain only numbers') 
   .length(10, 'Mobile number must be exactly 10 digits'), 
+  foundedAt: Yup.string().trim()
+  .required('Founded date is required'),
+  state: Yup.string().trim()
+  .required('State is required')
+  .matches(/^[a-zA-Z\s]*$/, 'Must contain only letters'),
+  district: Yup.string().trim()
+  .required('District is required')
+  .matches(/^[a-zA-Z\s]*$/, 'Must contain only letters'),
   password: Yup.string()
   .transform((value) => value.trim())
   .required('Password is required')
@@ -39,8 +47,12 @@ export const companyValidationSchema = Yup.object({
 export const jobPostValidationSchema = Yup.object({
   title: Yup.string().trim()
   .required("Job title is required"),
-  location: Yup.string().trim()
-  .required("Location is required"),
+  state: Yup.string().trim()
+  .required("Location is required")
+  .matches(/^[a-zA-Z\s]*$/, 'Must contain only letters'),
+  district: Yup.string().trim()
+  .required("Location is required")
+  .matches(/^[a-zA-Z\s]*$/, 'Must contain only letters'),
   employmentType: Yup.string()
   .oneOf(["Full-time", "Part-time", "Internship"], "Select a valid employment type")
   .required("Employment type is required"),

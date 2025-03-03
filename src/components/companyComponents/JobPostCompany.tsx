@@ -1,10 +1,10 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 //Apis
-import { companyJobPostService } from '../../apiServices/companyApi';
+import { companyJobPostService, getCompanyDetails } from '../../apiServices/companyApi';
 
 //Utils
 import prepareDataForPostApi from '../../utils/prepateDataForPostApis';
@@ -16,9 +16,11 @@ import { AiOutlineDelete } from "react-icons/ai";
 
 //Components
 import SubmitButtonEmployer from '../commonComponents/employer/SubmitButtonEmployer';
+import { Button } from '../ui/button';
 
 //Types and interfaces
 import { RootState } from '../../types/common/commonTypes';
+import { LocationForJob } from '@/types/company/comapanyInterfaces';
 
 //Validations
 import { jobPostValidationSchema } from '../../validations/companyValidations';
@@ -29,11 +31,31 @@ const JobPostCompany: React.FC = () => {
     const companyId = useSelector((state: RootState) => state?.company?.employerInfo?._id)
     const [loading, setLoading] = useState<boolean>(false)
     const navigate = useNavigate()
+    const [location, setLocation] = useState<LocationForJob>({state: '', district: ''})
+
+    useEffect(() => {
+        async function getCompany() {
+            try {
+                const response = await getCompanyDetails(companyId as string)
+                console.log('Success response after fetching companyDetails: ', response)
+                if(response?.data?.companyData){
+                    const {companyData} = response.data
+                    setLocation({state: companyData.state, district: companyData.district})
+                }
+            } catch (error: any) {
+                console.error('Error in fetching company details in Posting job component: ', error)
+            }
+        }
+         getCompany()
+        
+    }, [])
 
     const formik = useFormik({
+        enableReinitialize: true,
         initialValues: {
             title: "",
-            location: "",
+            state: location.state ?? "",
+            district: location.district ?? "",
             employmentType: "",
             workMode: "",
             minSalary: "",
@@ -122,21 +144,39 @@ const JobPostCompany: React.FC = () => {
             )}
         </div>
 
-        <div>
-            <label className='block text-gray-700 text-xs'>location</label>
-            <input 
-            type="text"
-            name="location"
-            className={`w-full text-sm p-2 border ${formik.touched.location && formik.errors.location ? 
-                'border-red-400' : 'border-gray-300'} outline-none rounded mt-1`} 
-            placeholder='Enter job location...'
-            value={formik.values.location}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            />
-            {formik.touched.location && formik.errors.location && (
-                <p className='text-red-500 text-xs'>{formik.errors.location}</p>
-            )}
+        <div className='grid grid-cols-2 gap-4'>
+            <div>
+                <label className='block text-gray-700 text-xs'>State</label>
+                <input 
+                type="text"
+                name="state"
+                className={`w-full text-sm p-2 border ${formik.touched.state && formik.errors.state ? 
+                    'border-red-400' : 'border-gray-300'} outline-none rounded mt-1`} 
+                placeholder='Enter job location...'
+                value={formik.values.state}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                />
+                {formik.touched.state && formik.errors.state && (
+                    <p className='text-red-500 text-xs'>{formik.errors.state}</p>
+                )}
+            </div>
+            <div>
+                <label className='block text-gray-700 text-xs'>District</label>
+                <input 
+                type="text"
+                name="district"
+                className={`w-full text-sm p-2 border ${formik.touched.district && formik.errors.district ? 
+                    'border-red-400' : 'border-gray-300'} outline-none rounded mt-1`} 
+                placeholder='Enter job location...'
+                value={formik.values.district}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                />
+                {formik.touched.district && formik.errors.district && (
+                    <p className='text-red-500 text-xs'>{formik.errors.district}</p>
+                )}
+            </div>
         </div>
 
 
@@ -216,11 +256,16 @@ const JobPostCompany: React.FC = () => {
                     <div className='flex items-center justify-between'>
                         <label className='block text-gray-700 text-xs font-semibold'>{field.label}</label>
 
-                        <div className='flex text-xs cursor-pointer bg-themeColor text-white px-2 py-1 border border-gray-300 rounded-md'
+                        <div className='flex'
                             onClick={() => addField(field.name)}
                             >
-                            <p>add</p>
-                            <IoIosAdd className='self-center'/>
+                                <Button
+                                type='button'
+                                className='text-xs bg-themeColor w-8 h-5 md:w-10 md:h-6 hover:bg-hoverThemeColor'
+                                >
+                                    add
+                                </Button>
+                        
                         </div>
 
                     </div>

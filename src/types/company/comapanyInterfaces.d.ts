@@ -37,3 +37,8 @@ export interface JobListingState {
     workMode: string;
     status: string;
 }
+
+export interface LocationForJob {
+    state: string;
+    district: string;
+}

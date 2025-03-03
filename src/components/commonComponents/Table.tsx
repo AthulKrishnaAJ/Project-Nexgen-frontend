@@ -23,7 +23,7 @@ const Table = <T extends Record<string, any>>({columns, data}: TableProp<T>) => 
       <thead className="whitespace-nowrap bg-gray-700 text-white">
         <tr>
             {columns.map((column) => (
-                <th key={column.key} className="p-4 text-left text-sm font-semibold">
+                <th key={column.key} className="p-4 text-left text-sm font-normal">
                     {column.label}
                 </th>
             ))}
@@ -36,7 +36,7 @@ const Table = <T extends Record<string, any>>({columns, data}: TableProp<T>) => 
             paginatedData.map((row, index) => (
                 <tr key={index} className='hover:bg-gray-100'>
                     {columns.map((column) => (
-                        <td key={column.key} className='p-4 text-sm text-gray-700'>
+                        <td key={column.key} className='p-4 text-sm text-gray-700 font-bold'>
                             {row[column.key as keyof typeof row]}
                         </td>
                     ))}

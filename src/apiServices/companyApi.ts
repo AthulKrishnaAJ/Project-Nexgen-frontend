@@ -93,3 +93,12 @@ export const changeJobStatusService = async (jobId: string, status: string) => {
         toast.error(error?.response?.data?.message)
     }
 }
+
+export const getCompanyDetails = async (companyId: string) => {
+    try {
+        const response = await axiosCompany.get(`/getCompany/${companyId}`)
+        return response
+    } catch (error) {
+        console.error('Error in changeJobStatusService at companyApi: ', error)
+    }
+}

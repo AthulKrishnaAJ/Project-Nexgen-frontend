@@ -2,8 +2,7 @@
 // types and interface
 import { UserPrimaryDetailsState } from "../types/seeker/seekerTypes"
 import { VerifyOtpPayloads, EmailWithPasswordState } from "../types/common/commonTypes"
-
-
+import { SkillServiceProps, ResumeServiceProps } from "@/types/seeker/seekerInterfaces"
 
 //Files
 import { axiosSeeker } from "../utils/axiosUtil"
@@ -26,7 +25,6 @@ export const signupSeeker = async (userData: UserPrimaryDetailsState, setLoading
         } else if (status === httpStatus.INTERNAL_SERVER_ERROR){
             toast.error(data.message)
         } 
-       
     } finally {
         setTimeout(() => {
             setLoading(false)
@@ -100,7 +98,7 @@ export const changePasswordService = async (datas: EmailWithPasswordState): Prom
 
 export const fetchSeekerDetailsService = async (seekerId: string): Promise<any> => {
     try {
-        const response = axiosSeeker.get(`/getSeeker/${seekerId}`)
+        const response = await axiosSeeker.get(`/getSeeker/${seekerId}`)
         return response
     } catch (error: any) {
         console.error('Error in changePasswordService at seekerApi service: ', error)
@@ -112,7 +110,7 @@ export const fetchSeekerDetailsService = async (seekerId: string): Promise<any> 
 
 export const fetchAllJobsService = async () => {
     try {
-        const response = axiosSeeker.get('/getJobs')
+        const response = await axiosSeeker.get('/getJobs')
         return response
     } catch (error: any) {
         console.error('Error in changePasswordService at seekerApi service: ', error)
@@ -120,3 +118,66 @@ export const fetchAllJobsService = async () => {
     }
 }
 
+
+export const fetchAllCompanyService = async () => {
+    try {
+        const response = await axiosSeeker.get('/getCompanies')
+        return response
+    } catch (error: any) {
+        console.error('Error in fetchAllCompanyService at seekerApi service: ', error)
+        toast.error(error.response?.data?.message)
+
+    }
+}
+
+
+export const uploadResumeService = async (formData: FormData) => {
+    try {
+        const response = await axiosSeeker.post('/uploadResume', formData, {
+            headers: { "Content-Type": "multipart/form-data" }
+        })
+        return response
+    } catch (error: any) {
+        console.error('Error in uploadResumeService at seekerApi service: ', error)
+        if(error.response?.status === httpStatus.CONFLICT){
+            toast.warning(error.response?.data?.message)
+        } else {
+            toast.error(error.response?.data?.message)
+        }
+        
+    }
+}
+
+
+export const addSkillsService = async (data: SkillServiceProps) => {
+    try {
+        const response = await axiosSeeker.post('/addSkill', data)
+        return response
+    } catch (error: any) {
+        console.error('Error in addSkillsService at seekerApi service: ', error)
+        toast.error(error.response?.data?.message)
+    }
+}
+
+
+export const deleteSkillService = async (data: SkillServiceProps) => {
+    try {
+        const response = await axiosSeeker.delete('/removeSkill', {
+            data: data
+        })
+        return response
+    } catch (error: any) {
+        console.error('Error in deleteSkillService at seekerApi service: ', error)
+        toast.error(error.response?.data?.message)
+    }
+}
+
+export const deleteResumeService = async (data: ResumeServiceProps) => {
+    try {
+        const response = await axiosSeeker.put('/removeResume', data)
+        return response
+    } catch (error: any) {
+        console.error('Error in deleteResumeService at seekerApi service: ', error)
+        toast.error(error.response?.data?.message)
+    }
+}

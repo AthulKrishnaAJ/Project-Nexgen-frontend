@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 //Components
-import ConfirmPopupWithButton from './ConfirmPopup';
+import ConfirmPopupWithButton from './ConfirmPopupWithButton';
 
 
 //Types and interfaces

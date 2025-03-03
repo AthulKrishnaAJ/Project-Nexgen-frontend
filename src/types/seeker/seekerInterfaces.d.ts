@@ -49,9 +49,12 @@ export interface SeekerProfileDatas {
     city?: string;
     state?: string;
     bio?: string;
+    resume?: string[];
+    skills?: string[];
     certifications?: string[] | [];
     experience?:SeekerExperienceRule[] | [];
     educations?:SeekerEducationRule[] | [];
+    resumeFiles?: { fileKey: string, base64: string }[]
 }
 
 export interface SeekerExperienceRule {
@@ -69,4 +72,32 @@ export interface SeekerEducationRule {
     fieldOfStudy: string;
     startDate: Date;
     endDate: Date;
+}
+
+
+export interface ResumeFile {
+    fileKey: string;
+    base64: string;
+  }
+
+export interface ResumeProps {
+    seekerId: string;
+    resumeFiles: ResumeFile[]
+    onUploadSuccess: () => void
+}
+
+export interface SkillServiceProps{
+    seekerId: string;
+    skill: string
+}
+
+export interface SkillComponentProps {
+    seekerId: string;
+    allSkills: string[];
+    onUploadSuccess: () => void
+}
+
+export interface ResumeServiceProps {
+    seekerId: string;
+    fileName: string;
 }

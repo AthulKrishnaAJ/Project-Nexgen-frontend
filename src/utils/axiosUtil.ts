@@ -56,16 +56,15 @@ axiosSeeker.interceptors.response.use (
     (response) => {
         const newAccessToken: string = response.headers?.authorization?.split(' ')[1];
         if(newAccessToken){
+            console.log('Enter with new access Token: ', newAccessToken)
             store.dispatch(updateSeekerToken(newAccessToken))
         }
         return response
     },
     (error) => {
         if(error.response?.status === (httpStatus.UNAUTHORIZED || httpStatus.FORBIDDEN)){
-         store.dispatch(clearSeekerState())
-            // setTimeout(() => {
-            //     window.location.href = '/login'
-            // }, 1000)
+            console.log('Enter errr response in axios response interceptors: ', error)
+            store.dispatch(clearSeekerState())
         }
         return Promise.reject(error)
     }
@@ -78,7 +77,6 @@ axiosCompany.interceptors.request.use(
     (config) => {
         const companyState = store.getState()
         const accessToken = companyState.company.employerInfo?.accessToken
-
         if(accessToken){
             config.headers.Authorization = `Bearer ${accessToken}`
         }

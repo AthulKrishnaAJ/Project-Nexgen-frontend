@@ -11,9 +11,9 @@ import ChangePasswordPage from "../pages/seekerPages/ChangePasswordPage";
 
 //Layout and components and pages
 import SeekerLayout from "@/pages/layouts/SeekerLayout";
-import ProfileSeeker from "@/components/seekerComponents/ProfileSeeker";
 import EditProfileSeeker from "@/components/seekerComponents/EditProfileSeeker";
 import HomeSeekerPage from "@/pages/seekerPages/HomeSeekerPage";
+import ProfileSeekerPage from "@/pages/seekerPages/ProfileSeekerPage";
 
 
 
@@ -30,7 +30,7 @@ const SeekerRoutes = () => {
             <Route element={<SeekerLayout/>}>
             <Route path='/' element={<HomeSeekerPage/>}/>
               <Route element={<SeekerProtectedRoute/>}>
-                <Route path="/profile" element={<ProfileSeeker/>}/>
+                <Route path="/profile" element={<ProfileSeekerPage/>}/>
                 <Route path="/editProfile" element={<EditProfileSeeker/>}/>
               </Route>
 
