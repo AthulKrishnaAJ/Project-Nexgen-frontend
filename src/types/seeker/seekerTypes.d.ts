@@ -5,6 +5,7 @@ export type UserPrimaryDetailsState = {
     lastName: string;
     email: string;
     mobile: string;
+    dateOfBirth: string;
     password: string;
 }
 

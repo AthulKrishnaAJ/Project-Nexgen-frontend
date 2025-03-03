@@ -33,7 +33,7 @@ const HeaderSeeker: React.FC = () => {
     ]
 
     const navigations = [
-        {text: 'Are you a company', icon: <BsBuildings/>, link: '/employer'},
+        {text: 'Are you an employer', icon: <BsBuildings/>, link: '/employer'},
         {
           text: seekerInfo ? 'Account' : 'Login',
           icon: seekerInfo ? <CiUser/> : <CiLogin/>,

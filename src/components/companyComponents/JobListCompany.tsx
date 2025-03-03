@@ -31,7 +31,7 @@ const JobListCompany: React.FC = () => {
                     const formattedJobs = response.data.jobs.map((job: JobsRuleType) => ({
                         id: job._id,
                         title: job.title,
-                        location: job.location,
+                        location: `${job.state}, ${job.district}`,
                         workMode: job.workMode,
                         status: job.status
                     }))

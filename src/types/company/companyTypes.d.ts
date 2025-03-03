@@ -1,10 +1,13 @@
 import React from "react";
 
 export type EmployerPrimaryDetailsState = {
-    firstName: string;
-    lastName: string;
+    companyName: string;
+    industry: string;
     email: string;
     mobile: string;
+    foundedAt: Date | string;
+    state: string;
+    district: string;
     password: string;
 }
 

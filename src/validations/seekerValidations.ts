@@ -1,4 +1,7 @@
 import * as Yup from 'yup'
+import dayjs from 'dayjs'
+
+const minBirthDate = dayjs().subtract(18, 'year')
 
 export const signupValidationSchema = Yup.object({
 
@@ -21,6 +24,11 @@ export const signupValidationSchema = Yup.object({
   .required('Mobile number is required')
   .matches(/^\d+$/, 'Mobile number must contain only numbers') 
   .length(10, 'Mobile number must be exactly 10 digits'), 
+  dateOfBirth: Yup.string()
+  .required('Date of birth is required')
+  .test('is-18+', 'You must be at least 18 years old', (value) => {
+    return dayjs(value, 'YYYY-MM-DD').isBefore(minBirthDate);
+  }),
   password: Yup.string()
   .transform((value) => value.trim())
   .required('Password is required')
@@ -58,3 +66,9 @@ export const seekerEditProfileValidation = (pincodeError?: string | null) => {
         
     })
 }
+
+
+export const skillValidationSchema = Yup.object({
+  skill: Yup.string().trim()
+  .required('Field is required')
+})

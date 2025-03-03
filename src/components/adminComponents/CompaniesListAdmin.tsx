@@ -7,7 +7,7 @@ import { getAllCompaniesService, companyVerificationSerivce } from '../../apiSer
 
 //Components
 import InputModal from '../commonComponents/InputModal'
-import ConfirmPopupWithButton from '../commonComponents/ConfirmPopup'
+import ConfirmPopupWithButton from '../commonComponents/ConfirmPopupWithButton'
 import ComponentLoaderAdmin from '../commonComponents/admin/ComponentLoaderAdmin'
 
 

@@ -17,20 +17,35 @@ export const MirageLoader: React.FC<LoadedProps> = ({size}) => {
   }
 
 
-  export const SquircleLoader: React.FC<LoadedProps> = ({size}) => {
-  squircle.register()
-        return (
-        <l-squircle
-          size={size}
-          stroke="3"
-          stroke-length="0.4"
-          bg-opacity="0.1"
-          speed="1.1" 
-          color="white" 
-        ></l-squircle>
+export const SquircleLoader: React.FC<LoadedProps> = ({size}) => {
+      squircle.register()
+            return (
+            <l-squircle
+              size={size}
+              stroke="3"
+              stroke-length="0.4"
+              bg-opacity="0.1"
+              speed="1.1" 
+              color="white" 
+            ></l-squircle>
 
-    )
+        )
   }
+
+export const CommonComponentLoader: React.FC<{size: number}> = ({size}) => {
+      squircle.register()
+        return (
+                <l-squircle
+                  size={size}
+                  stroke="2"
+                  stroke-length="0.4"
+                  bg-opacity="0.1"
+                  speed="1.1" 
+                  color="black" 
+                ></l-squircle>
+
+       )
+}
 
 
 

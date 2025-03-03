@@ -1,12 +1,12 @@
 import React,{useState} from 'react'
 import { useFormik } from 'formik';
 import { useNavigate, Link } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 
 //Styles and Icons
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { CiMobile3, CiMail } from "react-icons/ci";
-import { LiaIndustrySolid } from "react-icons/lia";
 import signupEmployerImg from '../../assets/signupEmployerImg.png'
 import {toast} from 'sonner'
 
@@ -19,6 +19,7 @@ import { companyValidationSchema } from '../../validations/companyValidations';
 
 //Component
 import SubmitButton from "../commonComponents/employer/SubmitButtonEmployer";
+import { DatePicker } from 'antd';
 
 
 
@@ -28,6 +29,10 @@ const SignupEmployer: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false)
     const navigate = useNavigate()
 
+    const dateFormat = 'YYYY-MM-DD';
+    const date = new Date()
+    const formattedDate = dayjs(date).format(dateFormat)
+
 
     const formik = useFormik ({
         initialValues: {
@@ -35,6 +40,9 @@ const SignupEmployer: React.FC = () => {
            industry: '',
             email: '',
             mobile: '',
+            foundedAt: '',
+            state: '',
+            district: '',
             password: '',
             confirmPassword: ''
         },
@@ -70,8 +78,8 @@ const SignupEmployer: React.FC = () => {
     })
 
     return (
-        <div className="font-rubik bg-white min-h-screen">
-        <div className="grid md:grid-cols-2 items-center h-full">
+        <div className="font-rubik h-full">
+        <div className="grid grid-col-1 md:grid-cols-2 items-center min-h-screen">
         <div className="max-md:order-1 p-8 bg-bgThemeColor h-full flex flex-col items-center justify-center text-white">
           <h2 className="text-4xl font-bold mb-6 text-center text-themeColor">Find Your Perfect Match</h2>
           <ul className="space-y-4 text-lg">
@@ -123,7 +131,7 @@ const SignupEmployer: React.FC = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
-                    <LiaIndustrySolid className="absolute right-2 text-gray-400" />
+        
                   </div>
                   {
                   formik.touched.companyName && formik.errors.companyName && (
@@ -147,7 +155,7 @@ const SignupEmployer: React.FC = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
-                    <LiaIndustrySolid className="absolute right-2 text-gray-400" />
+           
                   </div>
                   {
                   formik.touched.industry && formik.errors.industry && (
@@ -207,6 +215,67 @@ const SignupEmployer: React.FC = () => {
                         </p>
                     )
                   }
+                </div>
+                <div className='grid grid-cols-3 items-center gap-3'>
+                  <div>
+                  <label htmlFor="mobile" className="text-gray-800 text-xs font-semibold block">Founded Date</label>
+                  <DatePicker
+                  className='w-full text-sm border border-gray-300 outline-none rounded mt-1 cursor-pointer'
+                  inputReadOnly
+                   maxDate={dayjs(formattedDate, dateFormat)}
+                    onChange={(_, dateString) => formik.setFieldValue('foundedAt', dateString)}
+                    value={formik.values.foundedAt ? dayjs(formik.values.foundedAt) : ''}
+                  />
+
+                  {
+                    formik.touched.foundedAt && formik.errors.foundedAt && (
+                        <p className='text-xs text-red-500'>
+                            {formik.errors.foundedAt}
+                        </p>
+                    )
+                  }
+                  </div>
+                  <div>
+                  <label htmlFor="mobile" className="text-gray-800 text-xs font-semibold block">State</label>
+                  <input 
+                      type='text'
+                      name="state" 
+                      className={`w-full bg-transparent text-xs border-b px-2 py-2 pr-8 outline-none
+                        ${formik.touched.state && formik.errors.state ? 'border-red-400' : 'border-gray-300 focus:border-themeColor'}`}  
+                      placeholder="Enter password"
+                      value={formik.values.state}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur} 
+                    />
+                  {
+                    formik.touched.state && formik.errors.state && (
+                        <p className='text-xs text-red-500'>
+                           {formik.errors.state}
+                        </p>
+                    )
+                  }
+                  </div>
+                  <div>
+                  <label htmlFor="mobile" className="text-gray-800 text-xs font-semibold block">District</label>
+                  <input 
+                      type='text'
+                      name="district" 
+                      className={`w-full bg-transparent text-xs border-b px-2 py-2 pr-8 outline-none
+                        ${formik.touched.district && formik.errors.district ? 'border-red-400' : 'border-gray-300 focus:border-themeColor'}`}  
+                      placeholder="Enter password"
+                      value={formik.values.district}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur} 
+                    />
+
+                  {
+                    formik.touched.district && formik.errors.district && (
+                        <p className='text-xs text-red-500'>
+                            {formik.errors.district}
+                        </p>
+                    )
+                  }
+                  </div>
                 </div>
     
                 <div>

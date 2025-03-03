@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 //Files
 import { signupSeeker } from "../../apiServices/seekerApi";
@@ -20,6 +21,7 @@ import { UserPrimaryDetailsState } from "../../types/seeker/seekerTypes";
 
 //Components
 import SubmitButtonSeeker from "../commonComponents/seeker/SubmitButtonSeeker";
+import { DatePicker } from 'antd';
 
 
 
@@ -32,6 +34,11 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
     password: { type: 'password', icon: <LuEyeClosed /> },
     confirmPassword: { type: 'password', icon: <LuEyeClosed /> }
   })
+  
+
+  const dateFormat = 'YYYY-MM-DD';
+  const date = new Date()
+  const formattedDate = dayjs(date).format(dateFormat)
 
 
   const handleToggleIcon = (field: string) => {
@@ -52,6 +59,7 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
       lastName: '',
       email: '',
       mobile: '',
+      dateOfBirth: '',
       password: '',
       confirmPassword: ''
     },
@@ -62,22 +70,23 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
       setLoading(true)
 
       const userData = Object.fromEntries(
-        Object.entries(values).map(([key, value]) => [key, value.trim()])
+        Object.entries(values).map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
         .filter(([key]) => key !== 'confirmPassword')
       ) as UserPrimaryDetailsState
 
+      console.log('VAaaaaluss: ', userData)
 
       const response = await signupSeeker(userData, setLoading)
       console.log('Response after the sending Otp to the mail: ', response)
-      const data = response?.data
-      if (data.success) {
-        toast.success(data.message)
+      
+      if (response?.data?.success) {
+        toast.success(response.data.message)
         const otpExpirationTime = Math.floor(Date.now() / 1000) + 60 
         localStorage.setItem('userEmail', userData.email)
         localStorage.setItem('seekerOtpExpiration', otpExpirationTime.toString())
         navigate('/otp', {replace: true})
       } else {
-        toast.error(data.message)
+        toast.error(response.data.message)
       }
       setLoading(false)
     }
@@ -139,7 +148,7 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
               <label className="text-gray-600 text-xs block mb-1">Email</label>
               <div className="relative flex items-center">
                 <input name="email" type="text" className={`w-full bg-transparent text-xs text-black border-b border-gray-300
-                             ${formik.touched.email && formik.errors.email ? 'border-red-400' : 'border-gray-300 focus:border-[#24A484]'} px-1 py-1 outline-none`} placeholder="Last Name"
+                  ${formik.touched.email && formik.errors.email ? 'border-red-400' : 'border-gray-300 focus:border-[#24A484]'} px-1 py-1 outline-none`} placeholder="Last Name"
                   value={formik.values.email}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -220,6 +229,24 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
                 formik.touched.confirmPassword && formik.errors.confirmPassword && (
                   <p className="text-red-500 text-xs">
                     {formik.errors.confirmPassword}
+                  </p>
+                )
+              }
+            </div>
+            <div className="mt-4">
+             <label className='block text-gray-700 text-xs'>Date of birth</label>
+                <DatePicker
+                maxDate={dayjs(formattedDate, dateFormat)}
+                onChange={(date) => formik.setFieldValue('dateOfBirth', date ? dayjs(date).format('YYYY-MM-DD') : null)}
+                className={`w-full bg-transparent text-xs text-black border-b 
+                  ${formik.touched.dateOfBirth && formik.errors.dateOfBirth ? 'border-red-400' : 'border-gray-300 focus:border-[#24A484]'} 
+                  px-1 py-1 outline-none`}
+                inputReadOnly
+                  />
+              {
+                formik.touched.dateOfBirth && formik.errors.dateOfBirth && (
+                  <p className="text-red-500 text-xs">
+                    {formik.errors.dateOfBirth}
                   </p>
                 )
               }

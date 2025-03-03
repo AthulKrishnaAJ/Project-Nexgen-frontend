@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useFormik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 dayjs.extend(customParseFormat);
 
 import prepareDataForPostApi from '@/utils/prepateDataForPostApis';
@@ -13,11 +14,11 @@ import { seekerEditProfileAction } from '@/redux/actions/seekerActions';
 import { fetchSeekerDetailsService } from '@/apiServices/seekerApi';
 
 //Styles and icons
-import { DatePicker } from 'antd';
 import {toast} from 'sonner'
 
 //Components
 import SubmitButtonSeeker from '../commonComponents/seeker/SubmitButtonSeeker';
+import { DatePicker } from 'antd';
 
 //Validations
 import { seekerEditProfileValidation } from '@/validations/seekerValidations';
@@ -41,6 +42,7 @@ const EditProfileSeeker: React.FC = () => {
     const seekerId = useSelector((state: RootState) => state?.seeker?.seekerInfo?._id) as string
     const dispatch = useDispatch<AppDispatch>()
     const [seekerData, setSeekerData] = useState<SeekerProfileDatas | null>(null)
+    const navigate = useNavigate()
 
     const dateFormat = 'YYYY-MM-DD';
     const date = new Date()
@@ -85,6 +87,9 @@ const EditProfileSeeker: React.FC = () => {
                 console.log('Success response in edit form: ', response)
                     if(response?.payload?.success){
                         toast.success(response.payload.message)
+                        setTimeout(() => {
+                            navigate('/profile')
+                        }, 500)
                     }
                 
             } catch (error: any) {
@@ -184,6 +189,7 @@ const EditProfileSeeker: React.FC = () => {
                         maxDate={dayjs(formattedDate, dateFormat)}
                         onChange={(_, dateString) => formik.setFieldValue('dateOfBirth', dateString)}
                         value={formik.values.dateOfBirth ? dayjs(formik.values.dateOfBirth) : ''}
+                        inputReadOnly
                     />
                     {formik.touched.dateOfBirth && formik.errors.dateOfBirth && (
                                 <p className='text-red-500 text-xs'>{formik.errors.dateOfBirth}</p>

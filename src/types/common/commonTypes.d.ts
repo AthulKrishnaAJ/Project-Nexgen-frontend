@@ -4,6 +4,7 @@ import store from "../../redux/store";
 export type clickSpanEvent = React.MouseEvent<HTMLSpanElement>;
 export type keyboardEvent = React.KeyboardEvent<HTMLInputElement>
 export type formEvent = React.FormEvent<HTMLFormElement>
+export type changeEvent = React.ChangeEvent<HTMLInputElement>
 
 export type LoadedProps = {
     size: number
@@ -133,3 +134,5 @@ export type TableProp<T> = {
     columns: Column[]
     data: T[]
 }
+
+
