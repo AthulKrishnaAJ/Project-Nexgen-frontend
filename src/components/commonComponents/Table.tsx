@@ -1,10 +1,9 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 
 //Types and interfaces
 import { TableProp } from '@/types/common/commonTypes'
 
-//Components
-import { Button } from '../ui/button'
+
 
 const Table = <T extends Record<string, any>>({columns, data}: TableProp<T>) => {
 
@@ -15,6 +14,7 @@ const Table = <T extends Record<string, any>>({columns, data}: TableProp<T>) => 
         const startIdx = (currentPage - 1) * rowsPerPage
         const endIdx = startIdx + rowsPerPage
         const paginatedData = data.slice(startIdx, endIdx)
+
   return (
     <>
     <div className='mt-4 max-w-5xl mx-auto font-rubik bg-white rounded-lg overflow-hidden shadow-lg'>

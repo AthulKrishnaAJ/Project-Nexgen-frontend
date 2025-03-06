@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { SeekerPrimaryState } from "../../types/seeker/seekerInterfaces";
-import { seekerLoginAction, seekerEditProfileAction } from "../actions/seekerActions";
+import { seekerLoginAction, seekerEditProfileAction, seekerGoogleAuthAction } from "../actions/seekerActions";
 
 
 
@@ -30,6 +30,9 @@ const seekerSlice = createSlice({
                 const updatedSeekerData = action.payload?.seekerData
                 state.seekerInfo = {...state.seekerInfo, ...updatedSeekerData}
                 console.log('Updated data: ', state.seekerInfo)
+            })
+            .addCase(seekerGoogleAuthAction.fulfilled, (state, action) => {
+                state.seekerInfo = action.payload?.userData
             })
     }
 })

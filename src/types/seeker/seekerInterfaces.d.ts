@@ -3,7 +3,7 @@ export interface SeekerStorePrimaryState {
     firstName: string;
     lastName: string;
     email: string;
-    mobile: string;
+    mobile?: string;
     blocked: boolean;
     logo?: string | null;
     accessToken?: string;
@@ -101,3 +101,20 @@ export interface ResumeServiceProps {
     seekerId: string;
     fileName: string;
 }
+
+export interface JobApplyServiceProps {
+    firstName: string;
+    lastName: string;
+    email: string;
+    mobile: string;
+    jobId: string;
+    companyId: string;
+    seekerId: string;
+    resume: string;
+    coverLetter: string;
+}
+
+export interface SearchBarProps {
+    onSearch: (searchTerm: string, location: string) => void;
+    title: string;
+  }

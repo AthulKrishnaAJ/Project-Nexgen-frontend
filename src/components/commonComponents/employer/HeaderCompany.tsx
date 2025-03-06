@@ -38,7 +38,7 @@ const HeaderCompany: React.FC = () => {
     sticky top-0 z-50">
     <div className="w-full flex items-center justify-between gap-x-14 relative">
       <AppTitle />
-        {location !== '/employer/jobPost' ? <SearchBarCompany/> : null}
+        {location !== '/employer/jobForm' ? <SearchBarCompany/> : null}
       <div
         id="collapseMenu"
         className="flex-1 max-lg:hidden lg:flex lg:items-center lg:justify-end max-lg:before:fixed max-lg:before:bg-black max-lg:before:opacity-40 max-lg:before:inset-0 max-lg:before:z-50"

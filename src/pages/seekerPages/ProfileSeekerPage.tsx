@@ -83,7 +83,7 @@ const ProfileSeekerPage: React.FC = () => {
     <>
       {componentLoading ? (
         <div className='fixed inset-0 bg-white bg-opacity-75 flex justify-center items-center z-50'>
-          <div className="absolute top-1/3">
+          <div className="absolute top-1/3 my-10">
             <CommonComponentLoader size={25}/>
           </div>
         </div>
@@ -134,17 +134,26 @@ const ProfileSeekerPage: React.FC = () => {
         <div className="pt-4">
           <h2 className="text-lg font-semibold text-gray-800 mb-2">Personal Information</h2>
           <ul className="space-y-2 text-sm">
-              <li>
+            {seekerData?.mobile && seekerData?.dateOfBirth ? (
+                <>
+                <li>
                   <span className="font-medium text-gray-800">Mobile:</span> 
                   <span className="ml-2 text-gray-700">{seekerData?.mobile}</span>
-              </li>
+                </li>
           
                   <li>
                       <span className="font-medium text-gray-800">Date of Birth:</span> 
                       <span className="ml-2 text-gray-700">
-                          {seekerData?.dateOfBirth ? formatDate(seekerData?.dateOfBirth as string) : 'nill'}
+                          {seekerData?.dateOfBirth && formatDate(seekerData?.dateOfBirth as string)}
                           </span>
                   </li>
+                </>
+            ) : (
+              <h2 className="mt-4 text-gray-600">
+                Your personal details are missing. Add your mobile number and date of birth to complete your profile etc...
+              </h2>
+            )}
+
                   {seekerData?.pincode && (
                       <li>
                           <span className="font-medium text-gray-800">Pincode:</span> 

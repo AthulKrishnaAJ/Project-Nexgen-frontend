@@ -72,3 +72,11 @@ export const skillValidationSchema = Yup.object({
   skill: Yup.string().trim()
   .required('Field is required')
 })
+
+
+export const appicationValidationSchema = Yup.object({
+  resume: Yup.string().trim()
+  .required("Please select a resume"),
+  coverLetter: Yup.string().trim()
+  .required("Cover letter is required"),
+})

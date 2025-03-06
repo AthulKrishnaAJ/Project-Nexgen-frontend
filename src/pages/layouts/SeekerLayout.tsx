@@ -6,6 +6,7 @@ import HeaderSeeker from '@/components/commonComponents/seeker/HeaderSeeker'
 import Footer from '@/components/commonComponents/Footer'
 
 
+
 //Styles and icons
 import { FaFacebookSquare } from "react-icons/fa";
 import { FaTwitterSquare } from "react-icons/fa";
@@ -43,6 +44,7 @@ const SeekerLayout: React.FC = () => {
         />
 
     </div>
+
   )
 }
 

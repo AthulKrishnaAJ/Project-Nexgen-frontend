@@ -14,6 +14,7 @@ import { CiUser } from "react-icons/ci";
 import { BsBuildings } from "react-icons/bs";
 import { CiLogin } from "react-icons/ci";
 import { IoIosLogOut } from "react-icons/io";
+import {toast} from 'sonner'
 
 
 //Types and interfaces
@@ -28,7 +29,7 @@ const HeaderSeeker: React.FC = () => {
   
 
     const mainNavigations = [
-        {text: 'Jobs', link: '#'},
+        {text: 'Jobs', link: '/jobs'},
         {text: 'Companies', link: '#'}
     ]
 
@@ -50,6 +51,7 @@ const HeaderSeeker: React.FC = () => {
 
     const confirmLogut = () => {
         dispatch(clearSeekerState())
+        toast.success('Logout success')
         setLogoutModalOpen(false)
     }
   
@@ -77,9 +79,9 @@ const HeaderSeeker: React.FC = () => {
             {mainNavigations.map((item, index) => (
                     <li key={index} className="mt-4 max-lg:border-b max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-themeColor lg:after:w-0
                         lg:hover:after:w-full lg:hover:after:h-[1px] lg:after:block lg:after:-bottom-2 lg:after:transition-all lg:after:duration-300">
-                        <a href="#" className="text-[#333] block text-sm">
+                        <Link to={item.link} className="text-[#333] block text-sm">
                             {item.text}
-                        </a> 
+                        </Link> 
                     </li>
                 ))}
           </ul>

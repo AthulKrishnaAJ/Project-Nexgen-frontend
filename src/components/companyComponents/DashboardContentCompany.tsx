@@ -25,7 +25,7 @@ const DashboardContentCompany: React.FC = () => {
                     </p>
             </div>
           <Button className='mt-10 bg-gray-900 text-white pb-1 secondary-btn shadow-md'>
-            <Link to='/employer/jobPost'>Post a job</Link>
+            <Link to='/employer/jobForm'>Post a job</Link>
           </Button>
 
         </div>

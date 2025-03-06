@@ -1,8 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { EmailWithPasswordState } from "../../types/common/commonTypes";
 import { SeekerEditProfilePayload } from "@/types/seeker/seekerInterfaces";
+import { GoogleAuthServiceProps } from "@/types/common/commonInterfaces";
 import { axiosSeeker } from "../../utils/axiosUtil";
 import httpStatus from "../../utils/httpStatus";
+import { data } from "react-router-dom";
 
 
 
@@ -21,8 +23,7 @@ export const seekerLoginAction = createAsyncThunk('seeker/login',
             }
         } catch (error: any) {
             console.error('Error in seekerLoginAction at seekerAction: ', error)
-            const {data} = error?.response
-            return rejectWithValue({message: data.message})
+            return rejectWithValue({message: error?.response?.data?.message})
         }
     }
 )
@@ -42,8 +43,26 @@ export const seekerEditProfileAction = createAsyncThunk('seeker/editProfile',
             }
         } catch (error: any) {
             console.error('Error in seekerLoginAction at seekerAction: ', error)
-            const {data} = error?.response
-            return rejectWithValue({message: data.message})
+            return rejectWithValue({message: error?.response?.data?.message})
+        }
+    }
+)
+
+
+export const seekerGoogleAuthAction = createAsyncThunk('seeker/googleAuth',
+    async (data: GoogleAuthServiceProps, {rejectWithValue}) => {
+        try {
+            const response = await axiosSeeker.post('/googleAuth', data)
+            if(response.status === httpStatus.OK){
+                return {
+                    success: true,
+                    message: response.data.message,
+                    userData: response.data.user
+                }
+            }
+        } catch (error: any) {
+            console.error('Error in seekerGoogleAuthAction at seekerAction: ', error)
+            return rejectWithValue({message: error?.response?.data?.message})
         }
     }
 )

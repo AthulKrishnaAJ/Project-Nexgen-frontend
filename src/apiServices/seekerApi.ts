@@ -2,7 +2,8 @@
 // types and interface
 import { UserPrimaryDetailsState } from "../types/seeker/seekerTypes"
 import { VerifyOtpPayloads, EmailWithPasswordState } from "../types/common/commonTypes"
-import { SkillServiceProps, ResumeServiceProps } from "@/types/seeker/seekerInterfaces"
+import { SkillServiceProps, ResumeServiceProps, JobApplyServiceProps } from "@/types/seeker/seekerInterfaces"
+import { GoogleAuthServiceProps } from "@/types/common/commonInterfaces"
 
 //Files
 import { axiosSeeker } from "../utils/axiosUtil"
@@ -101,7 +102,7 @@ export const fetchSeekerDetailsService = async (seekerId: string): Promise<any> 
         const response = await axiosSeeker.get(`/getSeeker/${seekerId}`)
         return response
     } catch (error: any) {
-        console.error('Error in changePasswordService at seekerApi service: ', error)
+        console.error('Error in fetchSeekerDetailsService at seekerApi service: ', error)
         toast.error(error.response?.data?.message)
         
     }
@@ -113,7 +114,7 @@ export const fetchAllJobsService = async () => {
         const response = await axiosSeeker.get('/getJobs')
         return response
     } catch (error: any) {
-        console.error('Error in changePasswordService at seekerApi service: ', error)
+        console.error('Error in fetchAllJobsService at seekerApi service: ', error)
         toast.error(error.response?.data?.message)
     }
 }
@@ -181,3 +182,16 @@ export const deleteResumeService = async (data: ResumeServiceProps) => {
         toast.error(error.response?.data?.message)
     }
 }
+
+export const appyJobService  = async (data: JobApplyServiceProps) => {
+    try {
+        const response = await axiosSeeker.post('/applyJob', data)
+        return response
+    } catch (error: any) {
+        console.error('Error in appyJobService at seekerApi service: ', error)
+        toast.error(error.response?.data?.message)
+    }
+}
+
+
+

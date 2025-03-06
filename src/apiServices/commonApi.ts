@@ -9,3 +9,5 @@ export const fetchStatesAndCitiesService = async (pincode: string) => {
         console.error('Error in fetching states and cities: ', error.message)
     }
 }
+
+
