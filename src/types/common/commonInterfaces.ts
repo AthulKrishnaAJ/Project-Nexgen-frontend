@@ -1,5 +1,7 @@
 import React from "react";
 
+import { SeekerProfileDatas } from "../seeker/seekerInterfaces";
+
 export interface JobsRuleType {
     _id: string;
     title: string;
@@ -15,10 +17,11 @@ export interface JobsRuleType {
     benefits: string[];
     jobApplications?: string[] | [];
     companyId: string;
-    status: 'open' | 'closed'
+    status?: 'open' | 'closed'
     companyName?: string;
     createdAt?: string;
     updatedAt?: string;
+    logo?: string;
 
 }
 
@@ -35,7 +38,7 @@ export interface JobPropsToCard {
             min: string;
             max: string;
         }
-        timeAgo: string;
+        timeAgo?: string;
 
     }
     buttons?: React.ReactNode
@@ -70,6 +73,28 @@ export interface CompanyDataToCard {
         verify: string;
     }
     buttons?: React.ReactNode
+}
+
+export interface JobDetailProp {
+    job: JobsRuleType
+    buttons: React.ReactNode
+}
+
+export interface ApplicationModalProp {
+    isOpen: boolean;
+    selectedJob: JobsRuleType;
+    onClose: () => void
+    seekerData: SeekerProfileDatas;
+}
+
+export interface GoogleAuthProps {
+    role: string
+}
+
+export interface GoogleAuthServiceProps {
+    credential: string;
+    clientId: string;
+    selectBy: string;
 }
 
 

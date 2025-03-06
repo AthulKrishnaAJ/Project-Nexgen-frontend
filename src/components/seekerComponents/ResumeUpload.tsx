@@ -129,8 +129,8 @@ const ResumeUpload: React.FC<ResumeProps> = ({seekerId, resumeFiles, onUploadSuc
   
                     {fileUrls.length > 0 ? (
                         fileUrls.map((file, index) => (
-                            <div key={index} className='flex items-center justify-between border shadow-lg p-3 rounded-md'>
-                            <a href={file.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                            <div key={index} className='flex items-center justify-between border shadow-lg p-3 rounded-md bg-gray-100'>
+                            <a href={file.url} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                                {file.fileKey.split('/').pop()}
                             </a>
                             <ConfirmPopWithIcons

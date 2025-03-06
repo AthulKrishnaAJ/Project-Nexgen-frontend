@@ -34,7 +34,7 @@ return (
 <div className='flex flex-col min-h-screen bg-gray-100'>
     <HeaderCompany/>
     <div className='flex flex-1 my-2'>
-      {location.pathname !== '/employer/jobPost' && <SidebarCompany/>}
+      {location.pathname !== '/employer/jobForm' && <SidebarCompany/>}
         <main className='flex-1 font-rubik'>
             <Outlet/>
         </main>

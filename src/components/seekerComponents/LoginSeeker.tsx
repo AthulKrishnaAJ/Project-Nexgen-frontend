@@ -24,6 +24,7 @@ import { loginValidationSchema } from "../../validations/commonValidations";
 
 //Component
 import SubmitButtonSeeker from '../commonComponents/seeker/SubmitButtonSeeker'
+import GoogleAuth from "../commonComponents/GoogleAuth";
 
 
 
@@ -96,7 +97,7 @@ const LoginSeeker: React.FC = (): React.ReactElement => {
           <img src={loginImg} className="lg:max-w-[85%] w-full h-full object-contain block mx-auto" alt="login-image" />
         </div>
 
-        <div className="flex items-center md:p-10  bg-white border rounded-lg  lg:w-8/12 lg:ml-0`">
+        <div className="flex flex-col items-center gap-6 md:p-10  bg-white border rounded-lg  lg:w-8/12 lg:ml-0`">
           <form className="max-w-sm w-full mx-auto" onSubmit={formik.handleSubmit}>
             <div className="mb-8">
               <h3 className="text-3xl font-semibold
@@ -156,11 +157,11 @@ const LoginSeeker: React.FC = (): React.ReactElement => {
               }
 
             </div>
-              <div className="mt-6">
+              <div className="mt-4">
                 <p className="text-sm text-gray-600 font-semibold"><Link to='/emailVerify'>Forgot password ?</Link></p>
               </div>
 
-            <div className="mt-4 flex ">
+            <div className="mt-2">
               <SubmitButtonSeeker loading={loading} text="Login"/>
             </div>
             <p className="text-sm text-gray-600 mt-4">Don't have an account? 
@@ -169,6 +170,9 @@ const LoginSeeker: React.FC = (): React.ReactElement => {
                 </Link>
             </p>
           </form>
+          <div className="max-w-sm w-full mx-auto">
+            <GoogleAuth role='user'/> 
+          </div>
         </div>
       </div>
     </div>

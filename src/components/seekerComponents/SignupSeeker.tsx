@@ -22,6 +22,7 @@ import { UserPrimaryDetailsState } from "../../types/seeker/seekerTypes";
 //Components
 import SubmitButtonSeeker from "../commonComponents/seeker/SubmitButtonSeeker";
 import { DatePicker } from 'antd';
+import GoogleAuth from "../commonComponents/GoogleAuth";
 
 
 
@@ -93,13 +94,13 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
   })
 
   return (
-    <div className="font-rubik bg-[#F0FBFA] bg-cover bg-center md:h-screen">
+    <div className="font-rubik bg-[#F0FBFA] bg-cover bg-center min-h-screen">
       <div className="grid md:grid-cols-2 items-center gap-4 h-full">
         <div className="max-md:order-1 p-4">
           <img src={signupImg} className="lg:max-w-[85%] w-full h-full object-contain block mx-auto" alt="login-image" />
         </div>
 
-        <div className="flex items-center md:p-10  bg-white border rounded-lg  lg:w-8/12 lg:ml-0`">
+        <div className="flex flex-col gap-4 items-center md:p-10  bg-white border rounded-lg  lg:w-8/12 lg:ml-0`">
           <form className="max-w-sm w-full mx-auto" onSubmit={formik.handleSubmit}>
             <div className="mb-8">
               <h3 className="text-3xl font-semibold bg-gradient-to-br from-gray-800 to-gray-500 bg-clip-text text-transparent">Create an account</h3>
@@ -251,7 +252,7 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
                 )
               }
             </div>
-            <p className="text-sm text-gray-600 mt-8">Already have an account? 
+            <p className="text-sm text-gray-600 mt-6">Already have an account? 
               <Link to='/login' className="text-[#24A484] font-semibold hover:underline ml-1">
                 Login here
               </Link>
@@ -262,6 +263,9 @@ const SignupSeeker: React.FC = (): React.ReactElement => {
 
             </div>
           </form>
+          <div className="max-w-sm w-full mx-auto">
+            <GoogleAuth role="user"/>
+          </div>
         </div>
       </div>
     </div>

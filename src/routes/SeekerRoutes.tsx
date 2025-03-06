@@ -14,6 +14,8 @@ import SeekerLayout from "@/pages/layouts/SeekerLayout";
 import EditProfileSeeker from "@/components/seekerComponents/EditProfileSeeker";
 import HomeSeekerPage from "@/pages/seekerPages/HomeSeekerPage";
 import ProfileSeekerPage from "@/pages/seekerPages/ProfileSeekerPage";
+import JoblistingSeekerPage from "@/pages/seekerPages/JoblistingSeekerPage";
+
 
 
 
@@ -29,6 +31,8 @@ const SeekerRoutes = () => {
 
             <Route element={<SeekerLayout/>}>
             <Route path='/' element={<HomeSeekerPage/>}/>
+            <Route path='/jobs' element={<JoblistingSeekerPage/>}/>
+
               <Route element={<SeekerProtectedRoute/>}>
                 <Route path="/profile" element={<ProfileSeekerPage/>}/>
                 <Route path="/editProfile" element={<EditProfileSeeker/>}/>

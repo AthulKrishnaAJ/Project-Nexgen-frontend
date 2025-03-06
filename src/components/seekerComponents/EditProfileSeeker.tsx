@@ -39,7 +39,7 @@ const EditProfileSeeker: React.FC = () => {
     const [locationLoading, setLocationLoading] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
     const [pincodeError, setPincodeError] = useState<string | null>(null)
-    const seekerId = useSelector((state: RootState) => state?.seeker?.seekerInfo?._id) as string
+    const seekerId = useSelector((state: RootState) => state.seeker?.seekerInfo?._id) as string
     const dispatch = useDispatch<AppDispatch>()
     const [seekerData, setSeekerData] = useState<SeekerProfileDatas | null>(null)
     const navigate = useNavigate()

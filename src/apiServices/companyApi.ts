@@ -102,3 +102,25 @@ export const getCompanyDetails = async (companyId: string) => {
         console.error('Error in changeJobStatusService at companyApi: ', error)
     }
 }
+
+export const companyJobEditService = async (formData: JobPostState, jobId: string) => {
+    try {
+        const response = await axiosCompany.post('/editJob', {...formData, jobId})
+        return response
+    } catch (error: any) {
+        console.error('Error in changeJobStatusService at companyApi: ', error)
+        toast.error(error?.response?.data?.message)
+    }
+}
+
+
+
+export const getApplicantService = async (companyId: string) => {
+    try {
+        const response = await axiosCompany.get(`/getApplicants/${companyId}`)
+        return response
+    } catch (error: any) {
+        console.error('Error in changeJobStatusService at companyApi: ', error)
+        toast.error(error?.response?.data?.message)
+    }
+}
