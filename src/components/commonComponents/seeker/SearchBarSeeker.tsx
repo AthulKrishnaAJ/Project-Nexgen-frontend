@@ -12,12 +12,16 @@ const SearchBarSeeker: React.FC<SearchBarProps> = ({ onSearch, title }) => {
     const [searchTerm, setSearchTerm] = useState<string>('')
     const [activeTab, setActiveTab] = useState<string>(title)
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            onSearch(searchTerm, activeTab)
-        }, 300)
 
-        return () => clearTimeout(timer)
+    useEffect(() => {
+            const timer = setTimeout(() => {
+                onSearch(searchTerm, activeTab)
+            }, 300)
+    
+           console.log('tringger search')
+    
+            return () => clearTimeout(timer)
+
     }, [searchTerm, activeTab, onSearch])
 
 

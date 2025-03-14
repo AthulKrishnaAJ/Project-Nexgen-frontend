@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { calculateTimeAgo } from '@/utils/dateFormation'
 
 //Api's
-import { fetchAllJobsService, fetchSeekerDetailsService } from '@/apiServices/seekerApi'
+import { fetchAllJobsService, fetchSeekerDetailsService, fetchSearchJobService } from '@/apiServices/seekerApi'
 
 //Types and interfaces
 import { JobsRuleType } from '@/types/common/commonInterfaces'
@@ -26,7 +26,7 @@ import SearchBarSeeker from '@/components/commonComponents/seeker/SearchBarSeeke
 
 
 const JoblistingSeekerPage: React.FC = () => {
-    const [allJobs, setAllJobs] = useState<JobsRuleType[] | []>([])
+    const [allJobs, setAllJobs] = useState<JobsRuleType[]>([])
     const [filteredJobs, setFilteredJobs] = useState<JobsRuleType[]>([])
     const [selectedJob, setSelectedJob] = useState<JobsRuleType | null>(null)
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,9 +43,9 @@ const JoblistingSeekerPage: React.FC = () => {
                     const jobs = response.data.jobs
                     setAllJobs(jobs)
                     setFilteredJobs(jobs)
-                    console.log(response.data.jobs)
+                    console.log(jobs)
                     if (jobs.length > 0) {
-                        setSelectedJob(response.data.jobs[0])
+                        setSelectedJob(jobs[0])
                     }
 
                 }
@@ -58,33 +58,25 @@ const JoblistingSeekerPage: React.FC = () => {
     }, [])
 
 
-    const handleSearch = (searchTerm: string, searchType: string) => {
+    const handleSearch = useCallback( async (searchTerm: string, searchType: string) => {
         if (!searchTerm.trim()) {
             setFilteredJobs(allJobs)
-            if (allJobs.length > 0 && !selectedJob) {
-                setSelectedJob(allJobs[0])
+            console.log('nothing')
+            setSelectedJob(allJobs[0])
+            return;
+        }
+        try {
+            const response = await fetchSearchJobService(searchTerm, searchType)
+            console.log('Success after searching: ', response)
+            if(response?.data?.jobs){
+                setFilteredJobs(response.data.jobs)
+                setSelectedJob(response.data.jobs[0])
             }
-            return
+        } catch (error) {
+            console.error('Error in handleSearch at joblistigPage: ', error)
         }
 
-        const filtered = allJobs.filter((job) => {
-            if (searchType === 'job') {
-                return job.title.toLowerCase().includes(searchTerm.toLowerCase())
-            } else {
-                return (
-                    job.state.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    job.district.toLowerCase().includes(searchTerm.toLowerCase())
-                )
-            }
-        })
-
-        setFilteredJobs(filtered)
-        if (filtered.length > 0) {
-            setSelectedJob(filtered[0])
-        } else {
-            setSelectedJob(null)
-        }
-    }
+    }, [allJobs])
 
 
     const handleApply = async () => {

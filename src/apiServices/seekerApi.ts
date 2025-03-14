@@ -194,4 +194,17 @@ export const appyJobService  = async (data: JobApplyServiceProps) => {
 }
 
 
+export const fetchSearchJobService = async (searchTerm: string, searchType: string) => {
+    try {
+        const response = await axiosSeeker.get('/searchJob', {
+            params: {searchTerm, searchType}
+        })
+        return response
+    } catch (error: any) {
+        console.error('Error in fetchSearchJobService at seekerApi service: ', error)
+        toast.error(error.response?.data?.message)
+    }
+}
+
+
 
